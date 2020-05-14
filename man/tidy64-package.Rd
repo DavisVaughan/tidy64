@@ -8,6 +8,14 @@
 \description{
 What the package does (one paragraph).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/DavisVaughan/tidy64}
+  \item Report bugs at \url{https://github.com/DavisVaughan/tidy64/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Davis Vaughan \email{davis@rstudio.com}
 
