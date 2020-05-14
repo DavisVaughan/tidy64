@@ -7,5 +7,6 @@
 #' @import rlang
 #' @import vctrs
 #' @importFrom glue glue
+#' @useDynLib tidy64, .registration = TRUE
 ## usethis namespace: end
 NULL
