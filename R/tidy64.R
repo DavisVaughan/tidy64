@@ -1,3 +1,7 @@
+tidy64 <- function(x = double()) {
+  vec_cast(x, tidy64_global_empty_tidy64)
+}
+
 new_tidy64 <- function(left = double(), right = double(), ..., class = character()) {
   if (!is_double(left)) {
     abort("`left` must be a double.")
