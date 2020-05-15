@@ -33,3 +33,15 @@ vec_ptype2.tidy64.integer <- function(x, y, ...) {
 vec_ptype2.integer.tidy64 <- function(x, y, ...) {
   tidy64_global_empty_tidy64
 }
+
+# ------------------------------------------------------------------------------
+
+#' @export
+vec_ptype2.tidy64.logical <- function(x, y, ...) {
+  tidy64_global_empty_tidy64
+}
+
+#' @export
+vec_ptype2.logical.tidy64 <- function(x, y, ...) {
+  tidy64_global_empty_tidy64
+}
