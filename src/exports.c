@@ -12,34 +12,34 @@ sexp export_tidy64_pack(sexp x) {
     r_abort("Internal error: `x` must have size 2.");
   }
 
-  sexp right = r_list_get(x, 0);
-  sexp left = r_list_get(x, 1);
+  sexp left = r_list_get(x, 0);
+  sexp right = r_list_get(x, 1);
 
-  const r_ssize size = r_length(right);
+  const r_ssize size = r_length(left);
 
-  if (r_typeof(right) != r_type_double) {
-    r_abort("Internal error: `right` must have type double.");
-  }
   if (r_typeof(left) != r_type_double) {
     r_abort("Internal error: `left` must have type double.");
   }
-  if (r_length(right) != r_length(left)) {
-    r_abort("Internal error: `right` and `left` must have the same size.");
+  if (r_typeof(right) != r_type_double) {
+    r_abort("Internal error: `right` must have type double.");
   }
+  if (size != r_length(right)) {
+    r_abort("Internal error: `left` and `right` must have the same size.");
+  }
+
+  const double* p_left = r_dbl_const_deref(left);
+  const double* p_right = r_dbl_const_deref(right);
 
   sexp out = KEEP(r_new_vector(r_type_double, size));
   double* p_out = r_dbl_deref(out);
 
-  const double* p_right = r_dbl_const_deref(right);
-  const double* p_left = r_dbl_const_deref(left);
-
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_right = p_right[i];
     const double elt_left = p_left[i];
+    const double elt_right = p_right[i];
 
     const struct tidy64 elt = {
-      .right = elt_right,
-      .left = elt_left
+      .left = elt_left,
+      .right = elt_right
     };
 
     int64_t out_elt = tidy64_pack(elt);
@@ -61,11 +61,11 @@ sexp export_tidy64_unpack(sexp x) {
 
   r_ssize size = r_length(x);
 
-  sexp right = KEEP(r_new_vector(r_type_double, size));
   sexp left = KEEP(r_new_vector(r_type_double, size));
+  sexp right = KEEP(r_new_vector(r_type_double, size));
 
-  double* p_right = r_dbl_deref(right);
   double* p_left = r_dbl_deref(left);
+  double* p_right = r_dbl_deref(right);
 
   const double* p_x = r_dbl_deref(x);
 
@@ -78,13 +78,13 @@ sexp export_tidy64_unpack(sexp x) {
 
     const struct tidy64 out_elt = tidy64_unpack(elt);
 
-    p_right[i] = out_elt.right;
     p_left[i] = out_elt.left;
+    p_right[i] = out_elt.right;
   }
 
   sexp out = KEEP(r_new_vector(r_type_list, 2));
-  r_list_set(out, 0, right);
-  r_list_set(out, 1, left);
+  r_list_set(out, 0, left);
+  r_list_set(out, 1, right);
 
   FREE(3);
   return out;

@@ -21,10 +21,15 @@ static inline const struct tidy64 tidy64_unpack(int64_t x) {
     x_u64 = (uint64_t) x;
   }
 
-  // Split into 32 bit sections
   // TODO: Is this specific to endianness? I think not?
-  uint32_t right_u32 = (uint32_t) (x_u64 & 0xFFFFFFFFLL);
+  //
+  // left_u32:
+  //   Right shift the left-most 32 bits and then shove them into the
+  //   equivalent 32-bit type.
+  // right_u32:
+  //   Directly shove the right-most 32 bits into the equivalent 32-bit type.
   uint32_t left_u32 = (uint32_t) (x_u64 >> 32);
+  uint32_t right_u32 = (uint32_t) (x_u64);
 
   // Map uint32_t -> int32_t
   // This allows order to be maintained
@@ -35,13 +40,12 @@ static inline const struct tidy64 tidy64_unpack(int64_t x) {
     left_32 = (int32_t) left_u32;
   }
 
-  double right = (double) right_u32;
   double left = (double) left_32;
-
+  double right = (double) right_u32;
 
   const struct tidy64 out = {
-    .right = right,
-    .left = left
+    .left = left,
+    .right = right
   };
 
   return out;
@@ -50,15 +54,15 @@ static inline const struct tidy64 tidy64_unpack(int64_t x) {
 // -----------------------------------------------------------------------------
 
 static inline int64_t tidy64_pack(const struct tidy64 x) {
-  double right = x.right;
   double left = x.left;
+  double right = x.right;
 
-  if (right == r_dbl_na) {
+  if (left == r_dbl_na) {
     return r_int64_na;
   }
 
-  uint32_t right_u32 = (uint32_t) right;
   int32_t left_32 = (int32_t) left;
+  uint32_t right_u32 = (uint32_t) right;
 
   // Map int32_t -> uint32_t
   uint32_t left_u32;
@@ -69,6 +73,10 @@ static inline int64_t tidy64_pack(const struct tidy64 x) {
   }
 
   // Bind (uint32_t, uint32_t) -> uint64_t
+  // - First cast `left_u32` to 64-bit so it has room when bits are shifted.
+  //   The 32 bits should be in the right-most 32 bits of the 64-bit object.
+  // - Left shift those 32-bits so they are in the original left-most 32-bits.
+  // - Then fill the right-most 32 bits with the 32 bits of `right_u32`.
   uint64_t out_u64 = ((uint64_t) left_u32) << 32 | right_u32;
 
   // Map uint64_t -> int64_t
