@@ -11,8 +11,8 @@
 // -----------------------------------------------------------------------------
 
 struct tidy64 {
-  double first;
-  double last;
+  double right;
+  double left;
 };
 
 const struct tidy64 new_na_tidy64();
