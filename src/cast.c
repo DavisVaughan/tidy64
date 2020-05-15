@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "tidy64.h"
 #include "pack.h"
+#include "force.h"
 
 // -----------------------------------------------------------------------------
 
@@ -19,6 +20,12 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
 
   for (r_ssize i = 0; i < size; ++i) {
     const double x_elt = p_x[i];
+
+    if (r_dbl_missing(x_elt)) {
+      p_left[i] = r_dbl_na;
+      p_right[i] = r_dbl_na;
+      continue;
+    }
 
     if (DBL_OUTSIDE_TIDY64_RANGE(x_elt)) {
       Rf_error("TODO: Incompatible type error");
@@ -55,6 +62,18 @@ sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x) {
 // -----------------------------------------------------------------------------
 
 // [[ include("cast.h") ]]
+sexp tidy64_cast_to_tidy64_from_int(sexp x) {
+  return tidy64_force_to_tidy64_from_int(x);
+}
+
+// [[ include("cast.h") ]]
+sexp export_tidy64_cast_to_tidy64_from_int(sexp x) {
+  return tidy64_cast_to_tidy64_from_int(x);
+}
+
+// -----------------------------------------------------------------------------
+
+// [[ include("cast.h") ]]
 sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
   sexp left = tidy64_get_left(x);
   sexp right = tidy64_get_right(x);
@@ -70,6 +89,11 @@ sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
   for (r_ssize i = 0; i < size; ++i) {
     const double elt_left = p_left[i];
     const double elt_right = p_right[i];
+
+    if (r_dbl_missing(elt_left)) {
+      p_out[i] = r_dbl_na;
+      continue;
+    }
 
     const struct tidy64 elt = {
       .left = elt_left,

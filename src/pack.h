@@ -9,10 +9,6 @@
 // Inlined for performance, since pack/unpack are always used in tight loops.
 
 static inline const struct tidy64 tidy64_unpack(int64_t x) {
-  if (x == r_int64_na) {
-    return new_na_tidy64();
-  }
-
   // Map int64_t -> uint64_t
   uint64_t x_u64;
   if (signbit(x)) {
@@ -56,10 +52,6 @@ static inline const struct tidy64 tidy64_unpack(int64_t x) {
 static inline int64_t tidy64_pack(const struct tidy64 x) {
   double left = x.left;
   double right = x.right;
-
-  if (left == r_dbl_na) {
-    return r_int64_na;
-  }
 
   int32_t left_32 = (int32_t) left;
   uint32_t right_u32 = (uint32_t) right;
