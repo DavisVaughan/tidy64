@@ -1,4 +1,4 @@
-#include "cast.h"
+#include "force.h"
 #include "utils.h"
 #include "tidy64.h"
 #include "pack.h"
@@ -10,8 +10,8 @@
 // - TODO: And `+ 1` for trailing null?
 #define TIDY64_MAX_PRINT_SIZE (19 + 1 + 1)
 
-// [[ include("cast.h") ]]
-sexp tidy64_cast_to_chr_from_tidy64(sexp x) {
+// [[ include("force.h") ]]
+sexp tidy64_force_to_chr_from_tidy64(sexp x) {
   sexp left = tidy64_get_left(x);
   sexp right = tidy64_get_right(x);
 
@@ -52,9 +52,9 @@ sexp tidy64_cast_to_chr_from_tidy64(sexp x) {
 
 #undef TIDY64_MAX_PRINT_SIZE
 
-// [[ include("cast.h") ]]
-sexp export_tidy64_cast_to_chr_from_tidy64(sexp x) {
-  return tidy64_cast_to_chr_from_tidy64(x);
+// [[ include("force.h") ]]
+sexp export_tidy64_force_to_chr_from_tidy64(sexp x) {
+  return tidy64_force_to_chr_from_tidy64(x);
 }
 
 // -----------------------------------------------------------------------------
