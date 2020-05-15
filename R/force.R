@@ -11,6 +11,11 @@ as_tidy64.default <- function(x) {
   abort(glue("Can't convert <{cls}> to <tidy64>."))
 }
 
+#' @export
+as_tidy64.tidy64 <- function(x) {
+  x
+}
+
 # ------------------------------------------------------------------------------
 
 #' @export
