@@ -14,6 +14,9 @@ static inline sexp r_new_list(r_ssize size) {
 static inline sexp r_new_dbl(r_ssize size) {
   return r_new_vector(r_type_double, size);
 }
+static inline sexp r_new_chr(r_ssize size) {
+  return r_new_vector(r_type_character, size);
+}
 
 // -----------------------------------------------------------------------------
 
@@ -30,7 +33,20 @@ static inline double* r_dbl_deref(sexp x) {
   return REAL(x);
 }
 static inline const double* r_dbl_const_deref(sexp x) {
-  return (const double*) REAL(x);
+  return (const double*) r_dbl_deref(x);
+}
+
+static inline sexp* r_chr_deref(sexp x) {
+  return STRING_PTR(x);
+}
+static inline const sexp* r_chr_const_deref(sexp x) {
+  return (const sexp*) r_chr_deref(x);
+}
+
+// -----------------------------------------------------------------------------
+
+static inline bool r_dbl_missing(double x) {
+  return x == r_dbl_na;
 }
 
 // -----------------------------------------------------------------------------

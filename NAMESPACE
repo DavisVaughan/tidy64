@@ -3,6 +3,7 @@
 S3method(cnd_body,tidy64_warning_outside_tidy64_range)
 S3method(cnd_header,tidy64_warning_outside_tidy64_range)
 S3method(conditionMessage,tidy64_warning)
+S3method(format,tidy64)
 import(rlang)
 import(vctrs)
 importFrom(glue,glue)

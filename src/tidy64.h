@@ -2,6 +2,7 @@
 #define TIDY64_TIDY64_H
 
 #include "r.h"
+#include "utils.h"
 
 // -----------------------------------------------------------------------------
 
@@ -30,6 +31,15 @@ struct tidy64 {
 };
 
 const struct tidy64 new_na_tidy64();
+
+// -----------------------------------------------------------------------------
+
+static inline sexp tidy64_get_left(sexp x) {
+  return r_list_get(x, 0);
+}
+static inline sexp tidy64_get_right(sexp x) {
+  return r_list_get(x, 1);
+}
 
 // -----------------------------------------------------------------------------
 

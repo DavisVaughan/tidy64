@@ -92,4 +92,9 @@ static inline int64_t tidy64_pack(const struct tidy64 x) {
 
 // -----------------------------------------------------------------------------
 
+sexp export_tidy64_pack(sexp x);
+sexp export_tidy64_unpack(sexp x);
+
+// -----------------------------------------------------------------------------
+
 #endif

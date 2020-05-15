@@ -7,9 +7,12 @@
 #include "exports.h"
 
 static const R_CallMethodDef CallEntries[] = {
-  // #include "pack.h"
-  {"export_tidy64_pack",        (DL_FUNC) &export_tidy64_pack, 1},
-  {"export_tidy64_unpack",      (DL_FUNC) &export_tidy64_unpack, 1},
+  // cast.h
+  {"export_tidy64_cast_to_chr_from_tidy64",   (DL_FUNC) &export_tidy64_cast_to_chr_from_tidy64, 1},
+
+  // pack.h
+  {"export_tidy64_pack",                      (DL_FUNC) &export_tidy64_pack, 1},
+  {"export_tidy64_unpack",                    (DL_FUNC) &export_tidy64_unpack, 1},
 
   {NULL, NULL, 0}
 };
