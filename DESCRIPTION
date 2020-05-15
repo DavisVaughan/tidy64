@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 Imports: 
     glue,
     rlang,
-    vctrs
+    vctrs (>= 0.3.0)
 Suggests: 
     testthat,
     covr
