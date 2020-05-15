@@ -3,6 +3,7 @@
 
 // -----------------------------------------------------------------------------
 
+// [[ export() ]]
 sexp export_tidy64_pack(sexp x) {
   if (r_typeof(x) != r_type_list) {
     r_abort("Internal error: `x` must have type list.");
@@ -55,6 +56,7 @@ sexp export_tidy64_pack(sexp x) {
 
 // -----------------------------------------------------------------------------
 
+// [[ export() ]]
 sexp export_tidy64_unpack(sexp x) {
   if (r_typeof(x) != r_type_double) {
     r_abort("Internal error: `x` must have type double.");
