@@ -68,6 +68,7 @@ enum r_type {
 
 #define r_null R_NilValue
 
+#define r_lgl_na NA_LOGICAL
 #define r_dbl_na NA_REAL
 #define r_int_na NA_INTEGER
 #define r_chr_na NA_STRING

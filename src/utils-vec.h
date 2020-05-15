@@ -29,6 +29,13 @@ static inline sexp r_list_set(sexp x, r_ssize i, sexp value) {
 
 // -----------------------------------------------------------------------------
 
+static inline int* r_lgl_deref(sexp x) {
+  return LOGICAL(x);
+}
+static inline const int* r_lgl_const_deref(sexp x) {
+  return (const int*) r_lgl_deref(x);
+}
+
 static inline int* r_int_deref(sexp x) {
   return INTEGER(x);
 }
@@ -52,6 +59,9 @@ static inline const sexp* r_chr_const_deref(sexp x) {
 
 // -----------------------------------------------------------------------------
 
+static inline bool r_lgl_missing(int x) {
+  return x == r_lgl_na;
+}
 static inline bool r_dbl_missing(double x) {
   return isnan(x);
 }

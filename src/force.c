@@ -283,14 +283,58 @@ sexp export_tidy64_force_to_tidy64_from_int(sexp x) {
 
 // -----------------------------------------------------------------------------
 
+// [[ include("force.h") ]]
+sexp tidy64_force_to_tidy64_from_lgl(sexp x) {
+  r_ssize size = r_length(x);
+
+  sexp left = KEEP(r_new_vector(r_type_double, size));
+  sexp right = KEEP(r_new_vector(r_type_double, size));
+
+  double* p_left = r_dbl_deref(left);
+  double* p_right = r_dbl_deref(right);
+
+  const int* p_x = r_lgl_const_deref(x);
+
+  for (r_ssize i = 0; i < size; ++i) {
+    const int x_elt = p_x[i];
+
+    if (r_lgl_missing(x_elt)) {
+      p_left[i] = r_dbl_na;
+      p_right[i] = r_dbl_na;
+      continue;
+    }
+
+    bool elt = (bool) x_elt;
+
+    // Hardcode known values for performance
+    if (elt) {
+      p_left[i] = 0;
+      p_right[i] = 1;
+    } else {
+      p_left[i] = 0;
+      p_right[i] = 0;
+    }
+  }
+
+  sexp out = new_tidy64(left, right);
+
+  FREE(2);
+  return out;
+}
+
+// [[ include("force.h") ]]
+sexp export_tidy64_force_to_tidy64_from_lgl(sexp x) {
+  return tidy64_force_to_tidy64_from_lgl(x);
+}
+
+// -----------------------------------------------------------------------------
+
 // `long long` is at least 64-bits, `int64_t` is 64-bits. So we parse as
 // `long long` and then ensure that it fits in an `int64_t`.
 
 static bool chr_is_number_with_whitespace(const char* x,
                                           const char* endpointer,
                                           const size_t len);
-
-static const struct tidy64 force_to_tidy64_from_long_long(long long x);
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_tidy64_from_chr(sexp x) {
