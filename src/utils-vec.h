@@ -58,6 +58,9 @@ static inline bool r_dbl_missing(double x) {
 static inline bool r_int_missing(int x) {
   return x == r_int_na;
 }
+static inline bool r_chr_missing(sexp x) {
+  return x == r_chr_na;
+}
 
 // -----------------------------------------------------------------------------
 

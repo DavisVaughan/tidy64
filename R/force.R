@@ -41,6 +41,17 @@ tidy64_force_to_tidy64_from_int <- function(x) {
 # ------------------------------------------------------------------------------
 
 #' @export
+as_tidy64.character <- function(x) {
+  tidy64_force_to_tidy64_from_chr(x)
+}
+
+tidy64_force_to_tidy64_from_chr <- function(x) {
+  .Call(export_tidy64_force_to_tidy64_from_chr, x)
+}
+
+# ------------------------------------------------------------------------------
+
+#' @export
 as.character.tidy64 <- function(x) {
   tidy64_force_to_chr_from_tidy64(x)
 }
