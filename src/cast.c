@@ -176,3 +176,49 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x) {
 sexp export_tidy64_cast_to_int_from_tidy64(sexp x) {
   return tidy64_cast_to_int_from_tidy64(x);
 }
+
+// -----------------------------------------------------------------------------
+
+// [[ include("cast.h") ]]
+sexp tidy64_cast_to_lgl_from_tidy64(sexp x) {
+  sexp left = tidy64_get_left(x);
+  sexp right = tidy64_get_right(x);
+
+  const double* p_left = r_dbl_const_deref(left);
+  const double* p_right = r_dbl_const_deref(right);
+
+  r_ssize size = r_length(left);
+
+  sexp out = KEEP(r_new_vector(r_type_logical, size));
+  int* p_out = r_lgl_deref(out);
+
+  for (r_ssize i = 0; i < size; ++i) {
+    const double elt_left = p_left[i];
+    const double elt_right = p_right[i];
+
+    if (r_dbl_missing(elt_left)) {
+      p_out[i] = r_lgl_na;
+      continue;
+    }
+
+    if (elt_left != 0) {
+      Rf_error("TODO: Incompatible type error.");
+    }
+
+    if (elt_right == 0) {
+      p_out[i] = 0;
+    } else if (elt_right == 1) {
+      p_out[i] = 1;
+    } else {
+      Rf_error("TODO: Incompatible type error.");
+    }
+  }
+
+  FREE(1);
+  return out;
+}
+
+// [[ include("cast.h") ]]
+sexp export_tidy64_cast_to_lgl_from_tidy64(sexp x) {
+  return tidy64_cast_to_lgl_from_tidy64(x);
+}
