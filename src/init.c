@@ -10,6 +10,7 @@ static const R_CallMethodDef CallEntries[] = {
   // cast.h
   {"export_tidy64_cast_to_tidy64_from_dbl",   (DL_FUNC) &export_tidy64_cast_to_tidy64_from_dbl, 1},
   {"export_tidy64_cast_to_tidy64_from_int",   (DL_FUNC) &export_tidy64_cast_to_tidy64_from_int, 1},
+  {"export_tidy64_cast_to_tidy64_from_lgl",   (DL_FUNC) &export_tidy64_cast_to_tidy64_from_lgl, 1},
   {"export_tidy64_cast_to_dbl_from_tidy64",   (DL_FUNC) &export_tidy64_cast_to_dbl_from_tidy64, 1},
   {"export_tidy64_cast_to_int_from_tidy64",   (DL_FUNC) &export_tidy64_cast_to_int_from_tidy64, 1},
 
