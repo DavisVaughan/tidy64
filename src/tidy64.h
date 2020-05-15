@@ -25,21 +25,25 @@
 
 // -----------------------------------------------------------------------------
 
-struct tidy64 {
-  double left;
-  double right;
-};
-
-const struct tidy64 new_na_tidy64();
-
-// -----------------------------------------------------------------------------
-
 static inline sexp tidy64_get_left(sexp x) {
   return r_list_get(x, 0);
 }
 static inline sexp tidy64_get_right(sexp x) {
   return r_list_get(x, 1);
 }
+
+// -----------------------------------------------------------------------------
+
+struct tidy64 {
+  double left;
+  double right;
+};
+
+// -----------------------------------------------------------------------------
+
+const struct tidy64 new_na_tidy64();
+
+sexp new_tidy64(sexp left, sexp right);
 
 // -----------------------------------------------------------------------------
 

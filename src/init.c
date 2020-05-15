@@ -9,6 +9,7 @@
 static const R_CallMethodDef CallEntries[] = {
   // force.h
   {"export_tidy64_force_to_chr_from_tidy64",   (DL_FUNC) &export_tidy64_force_to_chr_from_tidy64, 1},
+  {"export_tidy64_force_to_tidy64_from_dbl",   (DL_FUNC) &export_tidy64_force_to_tidy64_from_dbl, 1},
 
   // pack.h
   {"export_tidy64_pack",                       (DL_FUNC) &export_tidy64_pack, 1},

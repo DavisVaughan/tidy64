@@ -58,3 +58,69 @@ sexp export_tidy64_force_to_chr_from_tidy64(sexp x) {
 }
 
 // -----------------------------------------------------------------------------
+
+// [[ include("force.h") ]]
+sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
+  r_ssize size = r_length(x);
+
+  sexp left = KEEP(r_new_vector(r_type_double, size));
+  sexp right = KEEP(r_new_vector(r_type_double, size));
+
+  double* p_left = r_dbl_deref(left);
+  double* p_right = r_dbl_deref(right);
+
+  const double* p_x = r_dbl_const_deref(x);
+
+  bool warn_na = false;
+  bool warn_precision = false;
+  r_ssize warn_na_loc = 0;
+  r_ssize warn_precision_loc = 0;
+
+  for (r_ssize i = 0; i < size; ++i) {
+    const double x_elt = p_x[i];
+
+    if (DBL_OUTSIDE_TIDY64_RANGE(x_elt)) {
+      p_left[i] = r_dbl_na;
+      p_right[i] = r_dbl_na;
+      warn_na = true;
+      warn_na_loc = i + 1;
+      continue;
+    }
+
+    if (!warn_precision && DBL_MIGHT_LOSE_PRECISION(x_elt)) {
+      warn_precision = true;
+      warn_precision_loc = i + 1;
+    }
+
+    const int64_t elt = (int64_t) x_elt;
+
+    const struct tidy64 out_elt = tidy64_unpack(elt);
+
+    p_left[i] = out_elt.left;
+    p_right[i] = out_elt.right;
+  }
+
+  if (warn_na) {
+    Rf_warning("Element %td is outside the range of tidy64 values, returning `NA`.", warn_na_loc);
+  }
+  if (warn_precision) {
+    Rf_warning(
+      "Element %td is outside the range of double values that can be stored in a tidy64 "
+      "with a guarantee that no precision is lost. Conversion will continue, "
+      "but check the values!",
+      warn_precision_loc
+    );
+  }
+
+  sexp out = new_tidy64(left, right);
+
+  FREE(2);
+  return out;
+}
+
+// [[ include("force.h") ]]
+sexp export_tidy64_force_to_tidy64_from_dbl(sexp x) {
+  return tidy64_force_to_tidy64_from_dbl(x);
+}
+
+// -----------------------------------------------------------------------------
