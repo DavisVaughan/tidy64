@@ -1,5 +1,9 @@
-# ------------------------------------------------------------------------------
-
+#' Coerce to a tidy64
+#'
+#' `as_tidy64()` converts `x` to tidy64 if possible.
+#'
+#' @param x A vector.
+#'
 #' @export
 as_tidy64 <- function(x) {
   UseMethod("as_tidy64")
@@ -63,7 +67,7 @@ tidy64_force_to_tidy64_from_chr <- function(x) {
 # ------------------------------------------------------------------------------
 
 #' @export
-as.character.tidy64 <- function(x) {
+as.character.tidy64 <- function(x, ...) {
   tidy64_force_to_chr_from_tidy64(x)
 }
 
@@ -74,7 +78,7 @@ tidy64_force_to_chr_from_tidy64 <- function(x) {
 # ------------------------------------------------------------------------------
 
 #' @export
-as.double.tidy64 <- function(x) {
+as.double.tidy64 <- function(x, ...) {
   tidy64_force_to_dbl_from_tidy64(x)
 }
 
@@ -85,7 +89,7 @@ tidy64_force_to_dbl_from_tidy64 <- function(x) {
 # ------------------------------------------------------------------------------
 
 #' @export
-as.integer.tidy64 <- function(x) {
+as.integer.tidy64 <- function(x, ...) {
   tidy64_force_to_int_from_tidy64(x)
 }
 
@@ -96,7 +100,7 @@ tidy64_force_to_int_from_tidy64 <- function(x) {
 # ------------------------------------------------------------------------------
 
 #' @export
-as.logical.tidy64 <- function(x) {
+as.logical.tidy64 <- function(x, ...) {
   tidy64_force_to_lgl_from_tidy64(x)
 }
 
