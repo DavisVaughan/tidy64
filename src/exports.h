@@ -4,7 +4,7 @@
 #include "r.h"
 
 // -----------------------------------------------------------------------------
-// #include "pack.h"
+#include "pack.h"
 
 sexp export_tidy64_pack(sexp x);
 sexp export_tidy64_unpack(sexp x);

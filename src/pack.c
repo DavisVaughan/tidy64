@@ -1,8 +1,7 @@
-#include "exports.h"
+#include "pack.h"
 #include "utils.h"
 
 // -----------------------------------------------------------------------------
-#include "pack.h"
 
 sexp export_tidy64_pack(sexp x) {
   if (r_typeof(x) != r_type_list) {
@@ -53,6 +52,8 @@ sexp export_tidy64_pack(sexp x) {
   FREE(1);
   return out;
 }
+
+// -----------------------------------------------------------------------------
 
 sexp export_tidy64_unpack(sexp x) {
   if (r_typeof(x) != r_type_double) {
