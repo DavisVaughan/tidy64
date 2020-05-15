@@ -1,0 +1,31 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# tidy64
+
+<!-- badges: start -->
+[![R build status](https://github.com/DavisVaughan/tidy64/workflows/R-CMD-check/badge.svg)](https://github.com/DavisVaughan/tidy64/actions)
+<!-- badges: end -->
+
+The goal of tidy64 is to ...
+
+## Installation
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("DavisVaughan/tidy64")
+```
