@@ -47,14 +47,14 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
   return out;
 }
 
-// [[ include("force.h") ]]
+// [[ include("cast.h") ]]
 sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x) {
   return tidy64_cast_to_tidy64_from_dbl(x);
 }
 
 // -----------------------------------------------------------------------------
 
-// [[ include("force.h") ]]
+// [[ include("cast.h") ]]
 sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
   sexp left = tidy64_get_left(x);
   sexp right = tidy64_get_right(x);
@@ -89,7 +89,7 @@ sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
   return out;
 }
 
-// [[ include("force.h") ]]
+// [[ include("cast.h") ]]
 sexp export_tidy64_cast_to_dbl_from_tidy64(sexp x) {
   return tidy64_cast_to_dbl_from_tidy64(x);
 }
