@@ -8,6 +8,20 @@
 // Defined equivalently to how base R uses `NA_INTEGER == INT_MIN`
 #define r_int64_na INT64_MIN
 
+#define TIDY64_MAX INT64_MAX
+#define TIDY64_MIN (INT64_MIN + 1)
+
+// Maximum double value such that it and all smaller integers can be represented
+// as an integer without loss of precision. It is 2^53.
+// https://stackoverflow.com/questions/1848700/biggest-integer-that-can-be-stored-in-a-double
+#define DBL_MAX_NO_PRECISION_LOSS 9007199254740992
+#define DBL_MIN_NO_PRECISION_LOSS (-DBL_MAX_NO_PRECISION_LOSS)
+
+// -----------------------------------------------------------------------------
+
+#define DBL_OUTSIDE_TIDY64_RANGE(X) (X < TIDY64_MIN || X > TIDY64_MAX)
+#define DBL_MIGHT_LOSE_PRECISION(X) (X < DBL_MIN_NO_PRECISION_LOSS || X > DBL_MAX_NO_PRECISION_LOSS)
+
 // -----------------------------------------------------------------------------
 
 struct tidy64 {
