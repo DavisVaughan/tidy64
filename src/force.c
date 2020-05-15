@@ -87,7 +87,7 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
       continue;
     }
 
-    if (!warn_precision && DBL_MIGHT_LOSE_PRECISION(x_elt)) {
+    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(x_elt)) {
       warn_precision = true;
       warn_precision_loc = i + 1;
     }

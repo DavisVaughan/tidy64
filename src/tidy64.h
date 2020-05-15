@@ -21,7 +21,7 @@
 // -----------------------------------------------------------------------------
 
 #define DBL_OUTSIDE_TIDY64_RANGE(X) (X < TIDY64_MIN || X > TIDY64_MAX)
-#define DBL_MIGHT_LOSE_PRECISION(X) (X < DBL_MIN_NO_PRECISION_LOSS || X > DBL_MAX_NO_PRECISION_LOSS)
+#define DBL_TIDY64_MIGHT_LOSE_PRECISION(X) (X < DBL_MIN_NO_PRECISION_LOSS || X > DBL_MAX_NO_PRECISION_LOSS)
 
 // -----------------------------------------------------------------------------
 
