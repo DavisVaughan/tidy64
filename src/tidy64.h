@@ -12,6 +12,9 @@
 #define TIDY64_MAX INT64_MAX
 #define TIDY64_MIN (INT64_MIN + 1)
 
+#define R_INT_MAX INT_MAX
+#define R_INT_MIN (INT_MIN + 1)
+
 // Maximum double value such that it and all smaller integers can be represented
 // as an integer without loss of precision. It is 2^53.
 // https://stackoverflow.com/questions/1848700/biggest-integer-that-can-be-stored-in-a-double
@@ -22,6 +25,7 @@
 
 #define DBL_OUTSIDE_TIDY64_RANGE(X) (X < TIDY64_MIN || X > TIDY64_MAX)
 #define DBL_TIDY64_MIGHT_LOSE_PRECISION(X) (X < DBL_MIN_NO_PRECISION_LOSS || X > DBL_MAX_NO_PRECISION_LOSS)
+#define TIDY64_OUTSIDE_INT_RANGE(X) (X < R_INT_MIN || X > R_INT_MAX)
 
 // -----------------------------------------------------------------------------
 

@@ -2,6 +2,7 @@
 
 S3method(as.character,tidy64)
 S3method(as.double,tidy64)
+S3method(as.integer,tidy64)
 S3method(as_tidy64,default)
 S3method(as_tidy64,double)
 S3method(as_tidy64,integer)
