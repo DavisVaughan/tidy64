@@ -8,49 +8,40 @@
 
 // [[ include("cast.h") ]]
 sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
-  r_ssize size = r_length(x);
-
-  sexp left = KEEP(r_new_vector(r_type_double, size));
-  sexp right = KEEP(r_new_vector(r_type_double, size));
-
-  double* p_left = r_dbl_deref(left);
-  double* p_right = r_dbl_deref(right);
-
   const double* p_x = r_dbl_const_deref(x);
 
-  for (r_ssize i = 0; i < size; ++i) {
-    const double x_elt = p_x[i];
+  r_ssize size = r_length(x);
 
-    if (r_dbl_missing(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+  sexp out = KEEP(tidy64_new(size));
+  int64_t* p_out = tidy64_deref(out);
+
+  for (r_ssize i = 0; i < size; ++i) {
+    const double elt = p_x[i];
+
+    if (r_dbl_missing(elt)) {
+      p_out[i] = r_int64_na;
       continue;
     }
 
-    if (DBL_OUTSIDE_TIDY64_RANGE(x_elt)) {
+    if (DBL_OUTSIDE_TIDY64_RANGE(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(x_elt)) {
+    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    const int64_t elt = (int64_t) x_elt;
+    const int64_t elt_64 = (int64_t) elt;
 
     // Catch fractional doubles!
-    if (elt != x_elt) {
+    if (elt != elt_64) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    const struct tidy64 out_elt = tidy64_unpack(elt);
-
-    p_left[i] = out_elt.left;
-    p_right[i] = out_elt.right;
+    p_out[i] = elt_64;
   }
 
-  sexp out = new_tidy64(left, right);
-
-  FREE(2);
+  FREE(1);
   return out;
 }
 
@@ -87,38 +78,26 @@ sexp export_tidy64_cast_to_tidy64_from_lgl(sexp x) {
 
 // [[ include("cast.h") ]]
 sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_double, size));
   double* p_out = r_dbl_deref(out);
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_dbl_na;
       continue;
     }
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    int64_t out_elt = tidy64_pack(elt);
-
-    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(out_elt)) {
+    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    p_out[i] = (double) out_elt;
+    p_out[i] = (double) elt;
   }
 
   FREE(1);
@@ -134,38 +113,26 @@ sexp export_tidy64_cast_to_dbl_from_tidy64(sexp x) {
 
 // [[ include("cast.h") ]]
 sexp tidy64_cast_to_int_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_integer, size));
   int* p_out = r_int_deref(out);
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_int_na;
       continue;
     }
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    int64_t out_elt = tidy64_pack(elt);
-
-    if (TIDY64_OUTSIDE_INT_RANGE(out_elt)) {
+    if (TIDY64_OUTSIDE_INT_RANGE(elt)) {
       Rf_error("TODO: Incompatible type error.");
     }
 
-    p_out[i] = (int) out_elt;
+    p_out[i] = (int) elt;
   }
 
   FREE(1);
@@ -181,33 +148,24 @@ sexp export_tidy64_cast_to_int_from_tidy64(sexp x) {
 
 // [[ include("cast.h") ]]
 sexp tidy64_cast_to_lgl_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_logical, size));
   int* p_out = r_lgl_deref(out);
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_lgl_na;
       continue;
     }
 
-    if (elt_left != 0) {
-      Rf_error("TODO: Incompatible type error.");
-    }
-
-    if (elt_right == 0) {
+    if (elt == 0) {
       p_out[i] = 0;
-    } else if (elt_right == 1) {
+    } else if (elt == 1) {
       p_out[i] = 1;
     } else {
       Rf_error("TODO: Incompatible type error.");
