@@ -1,7 +1,6 @@
 #include "cast.h"
 #include "utils.h"
 #include "tidy64.h"
-#include "pack.h"
 #include "force.h"
 
 // -----------------------------------------------------------------------------
@@ -19,15 +18,15 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
     const double elt = p_x[i];
 
     if (r_dbl_missing(elt)) {
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
-    if (DBL_OUTSIDE_TIDY64_RANGE(elt)) {
+    if (tidy64_dbl_is_outside_tidy64_range(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
+    if (tidy64_to_tidy64_from_dbl_might_lose_precision(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
@@ -93,7 +92,7 @@ sexp tidy64_cast_to_dbl_from_tidy64(sexp x) {
       continue;
     }
 
-    if (DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
+    if (tidy64_to_dbl_from_tidy64_might_lose_precision(elt)) {
       Rf_error("TODO: Incompatible type error");
     }
 
@@ -128,7 +127,7 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x) {
       continue;
     }
 
-    if (TIDY64_OUTSIDE_INT_RANGE(elt)) {
+    if (tidy64_is_outside_int_range(elt)) {
       Rf_error("TODO: Incompatible type error.");
     }
 

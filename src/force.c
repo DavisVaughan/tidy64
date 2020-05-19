@@ -1,7 +1,6 @@
 #include "force.h"
 #include "utils.h"
 #include "tidy64.h"
-#include "pack.h"
 #include <errno.h>
 #include <ctype.h>
 
@@ -68,7 +67,7 @@ sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
       continue;
     }
 
-    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
+    if (!warn_precision && tidy64_to_dbl_from_tidy64_might_lose_precision(elt)) {
       warn_precision = true;
     }
 
@@ -109,7 +108,7 @@ sexp tidy64_force_to_int_from_tidy64(sexp x) {
       continue;
     }
 
-    if (TIDY64_OUTSIDE_INT_RANGE(elt)) {
+    if (tidy64_is_outside_int_range(elt)) {
       p_out[i] = r_int_na;
       warn_na = true;
       continue;
@@ -183,18 +182,18 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
     const double elt = p_x[i];
 
     if (r_dbl_missing(elt)) {
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
-    if (DBL_OUTSIDE_TIDY64_RANGE(elt)) {
+    if (tidy64_dbl_is_outside_tidy64_range(elt)) {
       warn_na = true;
       warn_na_loc = i + 1;
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
-    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
+    if (!warn_precision && tidy64_to_tidy64_from_dbl_might_lose_precision(elt)) {
       warn_precision = true;
       warn_precision_loc = i + 1;
     }
@@ -238,7 +237,7 @@ sexp tidy64_force_to_tidy64_from_int(sexp x) {
     const int elt = p_x[i];
 
     if (r_int_missing(elt)) {
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
     } else {
       p_out[i] = (int64_t) elt;
     }
@@ -268,7 +267,7 @@ sexp tidy64_force_to_tidy64_from_lgl(sexp x) {
     const int elt = p_x[i];
 
     if (r_lgl_missing(elt)) {
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
     } else {
       p_out[i] = (int64_t) elt;
     }
@@ -310,7 +309,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     const sexp x_elt = p_x[i];
 
     if (r_chr_missing(x_elt)) {
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
@@ -320,7 +319,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     // Must special case `""`
     if (x_elt_len == 0) {
       warn = true;
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
@@ -333,7 +332,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     if (errno == ERANGE) {
       errno = 0;
       warn = true;
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
@@ -342,15 +341,15 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     // we check that the leftover values were just whitespace.
     if (*endpointer && !chr_is_number_with_whitespace(x_elt_char, endpointer, x_elt_len)) {
       warn = true;
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 
-    // This would only happen if `x_elt_ll` is the `r_int64_na` or if `long long`
+    // This would only happen if `x_elt_ll` is the `tidy64_na` or if `long long`
     // is larger than `int64_t`, which is unlikely.
     if (x_elt_ll < TIDY64_MIN || x_elt_ll > TIDY64_MAX) {
       warn = true;
-      p_out[i] = r_int64_na;
+      p_out[i] = tidy64_na;
       continue;
     }
 

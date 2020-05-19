@@ -6,6 +6,13 @@
 
 // -----------------------------------------------------------------------------
 
+struct tidy64 {
+  double left;
+  double right;
+};
+
+// -----------------------------------------------------------------------------
+
 // Inlined for performance, since pack/unpack are always used in tight loops.
 
 static inline const struct tidy64 tidy64_unpack(int64_t x) {
