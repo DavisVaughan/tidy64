@@ -14,36 +14,24 @@
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_chr_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_chr(size));
   sexp* p_out = r_chr_deref(out);
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_chr_na;
       continue;
     }
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    const int64_t elt_out = tidy64_pack(elt);
-
     char c_string[TIDY64_MAX_PRINT_SIZE];
 
-    snprintf(c_string, TIDY64_MAX_PRINT_SIZE, "%" PRId64, elt_out);
+    snprintf(c_string, TIDY64_MAX_PRINT_SIZE, "%" PRId64, elt);
 
     p_out[i] = r_new_string(c_string);
   }
@@ -63,13 +51,9 @@ sexp export_tidy64_force_to_chr_from_tidy64(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_double, size));
   double* p_out = r_dbl_deref(out);
@@ -77,26 +61,18 @@ sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
   bool warn_precision = false;
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_dbl_na;
       continue;
     }
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    int64_t out_elt = tidy64_pack(elt);
-
-    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(out_elt)) {
+    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
       warn_precision = true;
     }
 
-    p_out[i] = (double) out_elt;
+    p_out[i] = (double) elt;
   }
 
   if (warn_precision) {
@@ -116,13 +92,9 @@ sexp export_tidy64_force_to_dbl_from_tidy64(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_int_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_integer, size));
   int* p_out = r_int_deref(out);
@@ -130,28 +102,20 @@ sexp tidy64_force_to_int_from_tidy64(sexp x) {
   bool warn_na = false;
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_int_na;
       continue;
     }
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    int64_t out_elt = tidy64_pack(elt);
-
-    if (TIDY64_OUTSIDE_INT_RANGE(out_elt)) {
+    if (TIDY64_OUTSIDE_INT_RANGE(elt)) {
       p_out[i] = r_int_na;
       warn_na = true;
       continue;
     }
 
-    p_out[i] = (int) out_elt;
+    p_out[i] = (int) elt;
   }
 
   if (warn_na) {
@@ -171,33 +135,23 @@ sexp export_tidy64_force_to_int_from_tidy64(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_lgl_from_tidy64(sexp x) {
-  sexp left = tidy64_get_left(x);
-  sexp right = tidy64_get_right(x);
+  const int64_t* p_x = tidy64_deref(x);
 
-  const double* p_left = r_dbl_const_deref(left);
-  const double* p_right = r_dbl_const_deref(right);
-
-  r_ssize size = r_length(left);
+  r_ssize size = r_length(x);
 
   sexp out = KEEP(r_new_vector(r_type_logical, size));
   int* p_out = r_lgl_deref(out);
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double elt_left = p_left[i];
-    const double elt_right = p_right[i];
+    const int64_t elt = p_x[i];
 
-    if (r_dbl_missing(elt_left)) {
+    if (tidy64_missing(elt)) {
       p_out[i] = r_lgl_na;
       continue;
     }
 
     // Allow any non-0 value to be coerced to `TRUE`
-    // Hardcoded with known values for 0
-    if (elt_left == 0 && elt_right == 0) {
-      p_out[i] = 0;
-    } else {
-      p_out[i] = 1;
-    }
+    p_out[i] = elt ? 1 : 0;
   }
 
   FREE(1);
@@ -213,15 +167,12 @@ sexp export_tidy64_force_to_lgl_from_tidy64(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
+  const double* p_x = r_dbl_const_deref(x);
+
   r_ssize size = r_length(x);
 
-  sexp left = KEEP(r_new_vector(r_type_double, size));
-  sexp right = KEEP(r_new_vector(r_type_double, size));
-
-  double* p_left = r_dbl_deref(left);
-  double* p_right = r_dbl_deref(right);
-
-  const double* p_x = r_dbl_const_deref(x);
+  sexp out = KEEP(tidy64_new(size));
+  int64_t* p_out = tidy64_deref(out);
 
   bool warn_na = false;
   bool warn_precision = false;
@@ -229,33 +180,26 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
   r_ssize warn_precision_loc = 0;
 
   for (r_ssize i = 0; i < size; ++i) {
-    const double x_elt = p_x[i];
+    const double elt = p_x[i];
 
-    if (r_dbl_missing(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+    if (r_dbl_missing(elt)) {
+      p_out[i] = r_int64_na;
       continue;
     }
 
-    if (DBL_OUTSIDE_TIDY64_RANGE(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+    if (DBL_OUTSIDE_TIDY64_RANGE(elt)) {
       warn_na = true;
       warn_na_loc = i + 1;
+      p_out[i] = r_int64_na;
       continue;
     }
 
-    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(x_elt)) {
+    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(elt)) {
       warn_precision = true;
       warn_precision_loc = i + 1;
     }
 
-    const int64_t elt = (int64_t) x_elt;
-
-    const struct tidy64 out_elt = tidy64_unpack(elt);
-
-    p_left[i] = out_elt.left;
-    p_right[i] = out_elt.right;
+    p_out[i] = (int64_t) elt;
   }
 
   if (warn_na) {
@@ -270,9 +214,7 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
     );
   }
 
-  sexp out = new_tidy64(left, right);
-
-  FREE(2);
+  FREE(1);
   return out;
 }
 
@@ -285,36 +227,24 @@ sexp export_tidy64_force_to_tidy64_from_dbl(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_tidy64_from_int(sexp x) {
-  r_ssize size = r_length(x);
-
-  sexp left = KEEP(r_new_vector(r_type_double, size));
-  sexp right = KEEP(r_new_vector(r_type_double, size));
-
-  double* p_left = r_dbl_deref(left);
-  double* p_right = r_dbl_deref(right);
-
   const int* p_x = r_int_const_deref(x);
 
+  r_ssize size = r_length(x);
+
+  sexp out = KEEP(tidy64_new(size));
+  int64_t* p_out = tidy64_deref(out);
+
   for (r_ssize i = 0; i < size; ++i) {
-    const int x_elt = p_x[i];
+    const int elt = p_x[i];
 
-    if (r_int_missing(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
-      continue;
+    if (r_int_missing(elt)) {
+      p_out[i] = r_int64_na;
+    } else {
+      p_out[i] = (int64_t) elt;
     }
-
-    const int64_t elt = (int64_t) x_elt;
-
-    const struct tidy64 out_elt = tidy64_unpack(elt);
-
-    p_left[i] = out_elt.left;
-    p_right[i] = out_elt.right;
   }
 
-  sexp out = new_tidy64(left, right);
-
-  FREE(2);
+  FREE(1);
   return out;
 }
 
@@ -327,40 +257,24 @@ sexp export_tidy64_force_to_tidy64_from_int(sexp x) {
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_tidy64_from_lgl(sexp x) {
-  r_ssize size = r_length(x);
-
-  sexp left = KEEP(r_new_vector(r_type_double, size));
-  sexp right = KEEP(r_new_vector(r_type_double, size));
-
-  double* p_left = r_dbl_deref(left);
-  double* p_right = r_dbl_deref(right);
-
   const int* p_x = r_lgl_const_deref(x);
 
+  r_ssize size = r_length(x);
+
+  sexp out = KEEP(tidy64_new(size));
+  int64_t* p_out = tidy64_deref(out);
+
   for (r_ssize i = 0; i < size; ++i) {
-    const int x_elt = p_x[i];
+    const int elt = p_x[i];
 
-    if (r_lgl_missing(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
-      continue;
-    }
-
-    bool elt = (bool) x_elt;
-
-    // Hardcode known values for performance
-    if (elt) {
-      p_left[i] = 0;
-      p_right[i] = 1;
+    if (r_lgl_missing(elt)) {
+      p_out[i] = r_int64_na;
     } else {
-      p_left[i] = 0;
-      p_right[i] = 0;
+      p_out[i] = (int64_t) elt;
     }
   }
 
-  sexp out = new_tidy64(left, right);
-
-  FREE(2);
+  FREE(1);
   return out;
 }
 
@@ -380,15 +294,12 @@ static bool chr_is_number_with_whitespace(const char* x,
 
 // [[ include("force.h") ]]
 sexp tidy64_force_to_tidy64_from_chr(sexp x) {
+  const sexp* p_x = r_chr_const_deref(x);
+
   r_ssize size = r_length(x);
 
-  sexp left = KEEP(r_new_vector(r_type_double, size));
-  sexp right = KEEP(r_new_vector(r_type_double, size));
-
-  double* p_left = r_dbl_deref(left);
-  double* p_right = r_dbl_deref(right);
-
-  const sexp* p_x = r_chr_const_deref(x);
+  sexp out = KEEP(tidy64_new(size));
+  int64_t* p_out = tidy64_deref(out);
 
   // Reset errno to 0 in case something else has modified it
   errno = 0;
@@ -399,8 +310,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     const sexp x_elt = p_x[i];
 
     if (r_chr_missing(x_elt)) {
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+      p_out[i] = r_int64_na;
       continue;
     }
 
@@ -410,8 +320,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     // Must special case `""`
     if (x_elt_len == 0) {
       warn = true;
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+      p_out[i] = r_int64_na;
       continue;
     }
 
@@ -424,8 +333,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     if (errno == ERANGE) {
       errno = 0;
       warn = true;
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+      p_out[i] = r_int64_na;
       continue;
     }
 
@@ -434,8 +342,7 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     // we check that the leftover values were just whitespace.
     if (*endpointer && !chr_is_number_with_whitespace(x_elt_char, endpointer, x_elt_len)) {
       warn = true;
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+      p_out[i] = r_int64_na;
       continue;
     }
 
@@ -443,25 +350,20 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     // is larger than `int64_t`, which is unlikely.
     if (x_elt_ll < TIDY64_MIN || x_elt_ll > TIDY64_MAX) {
       warn = true;
-      p_left[i] = r_dbl_na;
-      p_right[i] = r_dbl_na;
+      p_out[i] = r_int64_na;
       continue;
     }
 
-    const int64_t x_elt_64 = (int64_t) x_elt_ll;
-    const struct tidy64 out_elt = tidy64_unpack(x_elt_64);
+    const int64_t out_elt = (int64_t) x_elt_ll;
 
-    p_left[i] = out_elt.left;
-    p_right[i] = out_elt.right;
+    p_out[i] = out_elt;
   }
 
   if (warn) {
     Rf_warning("TODO: Warn lossy parse");
   }
 
-  sexp out = new_tidy64(left, right);
-
-  FREE(2);
+  FREE(1);
   return out;
 }
 

@@ -38,6 +38,18 @@ static inline sexp tidy64_get_right(sexp x) {
 
 // -----------------------------------------------------------------------------
 
+static inline int64_t* tidy64_deref(sexp x) {
+  return (int64_t*) DATAPTR(x);
+}
+
+// -----------------------------------------------------------------------------
+
+static inline bool tidy64_missing(int64_t x) {
+  return x == r_int64_na;
+}
+
+// -----------------------------------------------------------------------------
+
 struct tidy64 {
   double left;
   double right;
@@ -47,6 +59,7 @@ struct tidy64 {
 
 const struct tidy64 new_na_tidy64();
 
+sexp tidy64_new(r_ssize size);
 sexp new_tidy64(sexp left, sexp right);
 
 // -----------------------------------------------------------------------------
