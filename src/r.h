@@ -73,4 +73,6 @@ enum r_type {
 #define r_int_na NA_INTEGER
 #define r_chr_na NA_STRING
 
+#define r_dbl_nan R_NaN
+
 #endif

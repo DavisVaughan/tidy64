@@ -25,6 +25,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"export_tidy64_force_to_tidy64_from_int",   (DL_FUNC) &export_tidy64_force_to_tidy64_from_int, 1},
   {"export_tidy64_force_to_tidy64_from_lgl",   (DL_FUNC) &export_tidy64_force_to_tidy64_from_lgl, 1},
 
+  // math.h
+  {"export_tidy64_log10",                      (DL_FUNC) &export_tidy64_log10, 1},
+
   // pack.h
   {"export_tidy64_pack",                       (DL_FUNC) &export_tidy64_pack, 1},
   {"export_tidy64_unpack",                     (DL_FUNC) &export_tidy64_unpack, 1},
