@@ -76,7 +76,7 @@ sexp export_tidy64_unpack(sexp x) {
   for (r_ssize i = 0; i < size; ++i) {
     const double x_elt = p_x[i];
 
-    if (DBL_OUTSIDE_TIDY64_RANGE(x_elt)) {
+    if (tidy64_dbl_is_outside_tidy64_range(x_elt)) {
       p_left[i] = r_dbl_na;
       p_right[i] = r_dbl_na;
       warn_na = true;
@@ -84,7 +84,7 @@ sexp export_tidy64_unpack(sexp x) {
       continue;
     }
 
-    if (!warn_precision && DBL_TIDY64_MIGHT_LOSE_PRECISION(x_elt)) {
+    if (!warn_precision && tidy64_to_tidy64_from_dbl_might_lose_precision(x_elt)) {
       warn_precision = true;
       warn_precision_loc = i + 1;
     }
