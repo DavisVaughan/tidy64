@@ -8,14 +8,14 @@ test_that("default method has nice error", {
 })
 
 # ------------------------------------------------------------------------------
-# as_tidy64(<double>)
+# as_tidy64(<double>) / as.double()
 
-test_that("can rountrip basic doubles", {
+test_that("can roundtrip basic doubles", {
   x <- c(-2, -1, 1, 2)
   expect_identical(as.double(as_tidy64(x)), x)
 })
 
-test_that("can rountrip zero", {
+test_that("can roundtrip zero", {
   expect_identical(as.double(as_tidy64(0)), 0)
 })
 
@@ -83,8 +83,51 @@ test_that("triggers warning above max / below min lossless double", {
   expect_warning(as_tidy64(y - 1))
 })
 
+test_that("as.double() warns if maybe losing precision", {
+  x <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
+  expect_warning(as.double(x))
+})
+
 # ------------------------------------------------------------------------------
-# as_tidy64(<character>)
+# as_tidy64(<integer>) / as.integer()
+
+test_that("can roundtrip basic doubles", {
+  x <- c(-2L, -1L, 1L, 2L)
+  expect_identical(as.integer(as_tidy64(x)), x)
+})
+
+test_that("can roundtrip zero", {
+  expect_identical(as.integer(as_tidy64(0L)), 0L)
+})
+
+test_that("can convert NA", {
+  expect_identical(as.integer(as_tidy64(NA_integer_)), NA_integer_)
+})
+
+test_that("as.integer() warns and returns integer if outside int range", {
+  x <- as_tidy64(tidy64_global_int_max + 1)
+  expect_identical(expect_warning(as.integer(x)), NA_integer_)
+})
+
+# ------------------------------------------------------------------------------
+# as_tidy64(<logical>)
+
+test_that("can roundtrip logicals", {
+  x <- c(TRUE, FALSE)
+  expect_identical(as.logical(as_tidy64(x)), x)
+})
+
+test_that("can convert NA", {
+  expect_identical(as.logical(as_tidy64(NA)), NA)
+})
+
+test_that("as.integer() forces any non-zero value to TRUE", {
+  x <- as_tidy64(5)
+  expect_identical(as.logical(x), TRUE)
+})
+
+# ------------------------------------------------------------------------------
+# as_tidy64(<character>) / as.character()
 
 test_that("can parse simple case", {
   expect_identical(as_tidy64("1"), as_tidy64(1))
