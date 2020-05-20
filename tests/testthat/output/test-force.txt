@@ -1,0 +1,7 @@
+
+default method has nice error
+=============================
+
+> as_tidy64(factor("x"))
+Error: Can't convert <factor> to <tidy64>.
+

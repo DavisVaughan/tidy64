@@ -26,8 +26,10 @@ static const R_CallMethodDef CallEntries[] = {
   {"export_tidy64_force_to_tidy64_from_lgl",   (DL_FUNC) &export_tidy64_force_to_tidy64_from_lgl, 1},
 
   // globals.h
-  {"export_tidy64_global_max_chr",             (DL_FUNC) &export_tidy64_global_max_chr, 0},
-  {"export_tidy64_global_min_chr",             (DL_FUNC) &export_tidy64_global_min_chr, 0},
+  {"export_tidy64_global_max_as_chr",          (DL_FUNC) &export_tidy64_global_max_as_chr, 0},
+  {"export_tidy64_global_min_as_chr",          (DL_FUNC) &export_tidy64_global_min_as_chr, 0},
+  {"export_tidy64_global_max_dbl",             (DL_FUNC) &export_tidy64_global_max_dbl, 0},
+  {"export_tidy64_global_min_dbl",             (DL_FUNC) &export_tidy64_global_min_dbl, 0},
 
   // math.h
   {"export_tidy64_log10",                      (DL_FUNC) &export_tidy64_log10, 1},

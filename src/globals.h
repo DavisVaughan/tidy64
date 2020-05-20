@@ -3,7 +3,9 @@
 
 #include "r.h"
 
-sexp export_tidy64_global_max_chr();
-sexp export_tidy64_global_min_chr();
+sexp export_tidy64_global_max_as_chr();
+sexp export_tidy64_global_min_as_chr();
+sexp export_tidy64_global_max_dbl();
+sexp export_tidy64_global_min_dbl();
 
 #endif

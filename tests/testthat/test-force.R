@@ -1,4 +1,89 @@
 # ------------------------------------------------------------------------------
+# as_tidy64(<default>)
+
+test_that("default method has nice error", {
+  verify_errors({
+    expect_error(as_tidy64(factor("x")))
+  })
+})
+
+# ------------------------------------------------------------------------------
+# as_tidy64(<double>)
+
+test_that("can rountrip basic doubles", {
+  x <- c(-2, -1, 1, 2)
+  expect_identical(as.double(as_tidy64(x)), x)
+})
+
+test_that("can rountrip zero", {
+  expect_identical(as.double(as_tidy64(0)), 0)
+})
+
+test_that("can convert NaN and NA", {
+  expect_identical(as.double(as_tidy64(NaN)), NA_real_)
+  expect_identical(as.double(as_tidy64(NA_real_)), NA_real_)
+})
+
+test_that("can roundtrip doubles past int max / min", {
+  x <- c(tidy64_global_int_max + 1, tidy64_global_int_min - 1)
+  expect_identical(as.double(as_tidy64(x)), x)
+})
+
+test_that("can roundtrip max/min allowed double input", {
+  max <- tidy64_global_max_dbl()
+  min <- tidy64_global_min_dbl()
+
+  expect_warning({
+    x <- as.double(as_tidy64(max))
+  })
+  expect_warning({
+    y <- as.double(as_tidy64(min))
+  })
+
+  expect_identical(x, max)
+  expect_identical(y, min)
+})
+
+test_that("next representable double above max/min double results in NA", {
+  # Values in this range have a step size of 1024 (512 on either side)
+  next_representable_dbl_above_max <- tidy64_global_max_dbl() + 512
+  next_representable_dbl_below_min <- tidy64_global_min_dbl() - 512
+
+  expect_warning({
+    x <- as_tidy64(next_representable_dbl_above_max)
+  })
+  expect_warning({
+    y <- as_tidy64(next_representable_dbl_below_min)
+  })
+
+  expect_identical(x, tidy64(NA))
+  expect_identical(y, tidy64(NA))
+})
+
+test_that("can handle infinity", {
+  expect_warning({
+    x <- as_tidy64(Inf)
+  })
+  expect_warning({
+    y <- as_tidy64(-Inf)
+  })
+
+  expect_identical(x, tidy64(NA))
+  expect_identical(y, tidy64(NA))
+})
+
+test_that("triggers warning above max / below min lossless double", {
+  x <- as.double(tidy64_global_max_lossless_double_chr)
+  y <- as.double(tidy64_global_min_lossless_double_chr)
+
+  expect_warning(as_tidy64(x), NA)
+  expect_warning(as_tidy64(x + 1))
+
+  expect_warning(as_tidy64(y), NA)
+  expect_warning(as_tidy64(y - 1))
+})
+
+# ------------------------------------------------------------------------------
 # as_tidy64(<character>)
 
 test_that("can parse simple case", {
@@ -51,28 +136,28 @@ test_that("NA_character_ can be converted", {
 
 test_that("can represent numbers above maximum representable double losslessly", {
   # 2^53
-  x <- "9007199254740992"
+  x <- tidy64_global_max_lossless_double_chr
   expect_identical(as.character(as_tidy64(x)), x)
 
   # 2^53 + 1
-  x <- "9007199254740993"
+  x <- tidy64_global_max_lossless_double_plus_one_chr
   expect_identical(as.character(as_tidy64(x)), x)
 
   # -2^53
-  x <- "-9007199254740992"
+  x <- tidy64_global_min_lossless_double_chr
   expect_identical(as.character(as_tidy64(x)), x)
 
   # -2^53 - 1
-  x <- "-9007199254740993"
+  x <- tidy64_global_min_lossless_double_minus_one_chr
   expect_identical(as.character(as_tidy64(x)), x)
 })
 
 test_that("can represent TIDY64_MAX but not more", {
-  x <- as_tidy64(tidy64_global_max_chr())
-  expect_identical(as.character(as_tidy64(x)), tidy64_global_max_chr())
+  x <- as_tidy64(tidy64_global_max_as_chr())
+  expect_identical(as.character(as_tidy64(x)), tidy64_global_max_as_chr())
 
-  x <- as_tidy64(tidy64_global_min_chr())
-  expect_identical(as.character(as_tidy64(x)), tidy64_global_min_chr())
+  x <- as_tidy64(tidy64_global_min_as_chr())
+  expect_identical(as.character(as_tidy64(x)), tidy64_global_min_as_chr())
 
   TIDY64_MAX_AND_1 <- "9223372036854775808"
   TIDY64_MIN_AND_1 <- "-9223372036854775808"
@@ -82,5 +167,15 @@ test_that("can represent TIDY64_MAX but not more", {
   })
   expect_warning({
     expect_identical(as_tidy64(TIDY64_MIN_AND_1), as_tidy64(NA))
+  })
+})
+
+# ------------------------------------------------------------------------------
+# errors
+
+test_that("force functions have informative errors", {
+  verify_output(test_path("output", "test-force.txt"), {
+    "# default method has nice error"
+    as_tidy64(factor("x"))
   })
 })

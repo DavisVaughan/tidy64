@@ -15,11 +15,21 @@ static sexp convert_int64_to_chr(int64_t x) {
 }
 
 // [[ include("globals.h") ]]
-sexp export_tidy64_global_max_chr() {
+sexp export_tidy64_global_max_as_chr() {
   return convert_int64_to_chr(TIDY64_MAX);
 }
 
 // [[ include("globals.h") ]]
-sexp export_tidy64_global_min_chr() {
+sexp export_tidy64_global_min_as_chr() {
   return convert_int64_to_chr(TIDY64_MIN);
+}
+
+// [[ include("globals.h") ]]
+sexp export_tidy64_global_max_dbl() {
+  return Rf_ScalarReal(TIDY64_MAX_DBL);
+}
+
+// [[ include("globals.h") ]]
+sexp export_tidy64_global_min_dbl() {
+  return Rf_ScalarReal(TIDY64_MIN_DBL);
 }
