@@ -3,6 +3,7 @@
 
 #include "cast.h"
 #include "force.h"
+#include "globals.h"
 #include "math.h"
 #include "pack.h"
 

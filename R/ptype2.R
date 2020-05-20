@@ -1,10 +1,5 @@
 # ------------------------------------------------------------------------------
 
-delayedAssign("tidy64_global_empty_double", double())
-delayedAssign("tidy64_global_empty_tidy64", new_tidy64())
-
-# ------------------------------------------------------------------------------
-
 #' @export
 vec_ptype2.tidy64.tidy64 <- function(x, y, ...) {
   tidy64_global_empty_tidy64

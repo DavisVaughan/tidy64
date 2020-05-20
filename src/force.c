@@ -7,11 +7,6 @@
 
 // -----------------------------------------------------------------------------
 
-// - 19 comes from printing out `INT64_MAX` and counting the number of digits
-// - `+ 1` because it could be negative and have a `-`
-// - TODO: And `+ 1` for trailing null?
-#define TIDY64_MAX_PRINT_SIZE (19 + 1 + 1)
-
 // [[ include("force.h") ]]
 sexp tidy64_force_to_chr_from_tidy64(sexp x) {
   const double* p_left = tidy64_get_left_const_deref(x);
@@ -43,8 +38,6 @@ sexp tidy64_force_to_chr_from_tidy64(sexp x) {
   FREE(1);
   return out;
 }
-
-#undef TIDY64_MAX_PRINT_SIZE
 
 // [[ include("force.h") ]]
 sexp export_tidy64_force_to_chr_from_tidy64(sexp x) {
