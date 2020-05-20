@@ -33,6 +33,13 @@ static inline sexp r_list_set(sexp x, r_ssize i, sexp value) {
   return SET_VECTOR_ELT(x, i, value);
 }
 
+static inline sexp r_chr_get(sexp x, r_ssize i) {
+  return STRING_PTR(x)[i];
+}
+static inline void r_chr_set(sexp x, r_ssize i, sexp value) {
+  return SET_STRING_ELT(x, i, value);
+}
+
 // -----------------------------------------------------------------------------
 
 static inline int* r_lgl_deref(sexp x) {
@@ -76,6 +83,15 @@ static inline bool r_int_missing(int x) {
 }
 static inline bool r_chr_missing(sexp x) {
   return x == r_chr_na;
+}
+
+// -----------------------------------------------------------------------------
+
+static inline sexp r_new_shared_vector(enum r_type type, r_ssize size) {
+  sexp out = r_new_vector(type, size);
+  R_PreserveObject(out);
+  MARK_NOT_MUTABLE(out);
+  return out;
 }
 
 // -----------------------------------------------------------------------------

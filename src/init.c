@@ -31,6 +31,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"export_tidy64_global_max_dbl",             (DL_FUNC) &export_tidy64_global_max_dbl, 0},
   {"export_tidy64_global_min_dbl",             (DL_FUNC) &export_tidy64_global_min_dbl, 0},
 
+  // initialize.h
+  {"export_tidy64_initialize",                 (DL_FUNC) &export_tidy64_initialize, 1},
+
   // math.h
   {"export_tidy64_log10",                      (DL_FUNC) &export_tidy64_log10, 1},
 

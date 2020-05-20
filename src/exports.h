@@ -4,6 +4,7 @@
 #include "cast.h"
 #include "force.h"
 #include "globals.h"
+#include "initialize.h"
 #include "math.h"
 #include "pack.h"
 
