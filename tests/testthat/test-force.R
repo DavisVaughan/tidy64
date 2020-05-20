@@ -60,6 +60,17 @@ test_that("next representable double above max/min double results in NA", {
   expect_identical(y, tidy64(NA))
 })
 
+test_that("double -> tidy64 OOB warnings are informative", {
+  verify_errors({
+    x1 <- tidy64_global_max_dbl() + 512
+    x2 <- vec_rep(x1, 2)
+    x10 <- vec_rep(x1, 10)
+    expect_warning(as_tidy64(x1))
+    expect_warning(as_tidy64(x2))
+    expect_warning(as_tidy64(x10))
+  })
+})
+
 test_that("can handle infinity", {
   expect_warning({
     x <- as_tidy64(Inf)
@@ -220,5 +231,13 @@ test_that("force functions have informative errors", {
   verify_output(test_path("output", "test-force.txt"), {
     "# default method has nice error"
     as_tidy64(factor("x"))
+
+    "# double -> tidy64 OOB warnings are informative"
+    x1 <- tidy64_global_max_dbl() + 512
+    x2 <- vec_rep(x1, 2)
+    x10 <- vec_rep(x1, 10)
+    as_tidy64(x1)
+    as_tidy64(x2)
+    as_tidy64(x10)
   })
 })

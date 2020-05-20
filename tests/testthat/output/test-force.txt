@@ -5,3 +5,34 @@ default method has nice error
 > as_tidy64(factor("x"))
 Error: Can't convert <factor> to <tidy64>.
 
+
+double -> tidy64 OOB warnings are informative
+=============================================
+
+> x1 <- tidy64_global_max_dbl() + 512
+> x2 <- vec_rep(x1, 2)
+> x10 <- vec_rep(x1, 10)
+> as_tidy64(x1)
+Warning: Input is outside the range of a tidy64.
+i Range was exceeded at location 1.
+i Returning `NA` at the exceeded locations.
+
+<tidy64[1]>
+[1] NA
+
+> as_tidy64(x2)
+Warning: Input is outside the range of a tidy64.
+i Range was exceeded at locations 1 and 2.
+i Returning `NA` at the exceeded locations.
+
+<tidy64[2]>
+[1] NA NA
+
+> as_tidy64(x10)
+Warning: Input is outside the range of a tidy64.
+i Range was exceeded at locations 1, 2, 3, 4, 5, ...
+i Returning `NA` at the exceeded locations.
+
+<tidy64[10]>
+ [1] NA NA NA NA NA NA NA NA NA NA
+

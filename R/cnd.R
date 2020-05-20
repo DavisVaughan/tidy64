@@ -9,19 +9,19 @@ conditionMessage.tidy64_warning <- function(c) {
 
 # ------------------------------------------------------------------------------
 
-warn_outside_tidy64_range <- function(x) {
-  warn_tidy64(x = x, class = "tidy64_warning_outside_tidy64_range")
+warn_dbl_is_outside_tidy64_range <- function(x) {
+  warn_tidy64(x = x, class = "tidy64_warning_dbl_is_outside_tidy64_range")
 }
 
 #' @export
-cnd_header.tidy64_warning_outside_tidy64_range <- function(cnd, ...) {
-  "Can't losslessly store result in a tidy64."
+cnd_header.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
+  "Input is outside the range of a tidy64."
 }
 
 #' @export
-cnd_body.tidy64_warning_outside_tidy64_range <- function(cnd, ...) {
+cnd_body.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
   x <- cnd$x
-  indicator <- x > 9223372036854775807 | x < -9223372036854775807
+  indicator <- x > tidy64_global_max_dbl() | x < tidy64_global_min_dbl()
   locations <- which(indicator)
 
   if (length(locations) == 1L) {
@@ -33,9 +33,10 @@ cnd_body.tidy64_warning_outside_tidy64_range <- function(cnd, ...) {
   locations <- collapse_locations(locations)
   locations <- ensure_full_stop(locations)
 
-  bullet <- glue("Range was exceeded at {loc_chr} {locations}")
+  bullet1 <- glue("Range was exceeded at {loc_chr} {locations}")
+  bullet2 <- "Returning `NA` at the exceeded locations."
 
-  format_error_bullets(c(i = bullet))
+  format_error_bullets(c(i = bullet1, i = bullet2))
 }
 
 # ------------------------------------------------------------------------------

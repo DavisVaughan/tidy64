@@ -1,6 +1,7 @@
 #include "force.h"
 #include "utils.h"
 #include "pack.h"
+#include "cnd.h"
 #include "tidy64.h"
 #include <errno.h>
 #include <ctype.h>
@@ -189,9 +190,8 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
   double* p_left = tidy64_deref_left(left);
   double* p_right = tidy64_deref_right(right);
 
-  bool warn_na = false;
+  bool warn_oob = false;
   bool warn_precision = false;
-  r_ssize warn_na_loc = 0;
   r_ssize warn_precision_loc = 0;
 
   for (r_ssize i = 0; i < size; ++i) {
@@ -204,8 +204,7 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
     }
 
     if (tidy64_dbl_is_outside_tidy64_range(elt)) {
-      warn_na = true;
-      warn_na_loc = i + 1;
+      warn_oob = true;
       p_left[i] = r_dbl_na;
       p_right[i] = r_dbl_na;
       continue;
@@ -224,8 +223,8 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
     p_right[i] = unpacked.right;
   }
 
-  if (warn_na) {
-    Rf_warning("Element %td is outside the range of tidy64 values, returning `NA`.", warn_na_loc);
+  if (warn_oob) {
+    warn_dbl_is_outside_tidy64_range(x);
   }
   if (warn_precision) {
     Rf_warning(

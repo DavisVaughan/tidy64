@@ -2,6 +2,7 @@
 #define TIDY64_UTILS_H
 
 #include "utils-attr.h"
+#include "utils-call.h"
 #include "utils-cnd.h"
 #include "utils-globals.h"
 #include "utils-size.h"

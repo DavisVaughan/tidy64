@@ -1,5 +1,6 @@
 #include "pack.h"
 #include "utils.h"
+#include "cnd.h"
 
 // -----------------------------------------------------------------------------
 
@@ -63,9 +64,8 @@ sexp export_tidy64_unpack(sexp x) {
 
   const double* p_x = r_dbl_deref(x);
 
-  bool warn_na = false;
+  bool warn_oob = false;
   bool warn_precision = false;
-  r_ssize warn_na_loc = 0;
   r_ssize warn_precision_loc = 0;
 
   for (r_ssize i = 0; i < size; ++i) {
@@ -74,8 +74,7 @@ sexp export_tidy64_unpack(sexp x) {
     if (tidy64_dbl_is_outside_tidy64_range(x_elt)) {
       p_left[i] = r_dbl_na;
       p_right[i] = r_dbl_na;
-      warn_na = true;
-      warn_na_loc = i + 1;
+      warn_oob = true;
       continue;
     }
 
@@ -92,8 +91,8 @@ sexp export_tidy64_unpack(sexp x) {
     p_right[i] = out_elt.right;
   }
 
-  if (warn_na) {
-    Rf_warning("Element %td is outside the range of tidy64 values, returning `NA`.", warn_na_loc);
+  if (warn_oob) {
+    warn_dbl_is_outside_tidy64_range(x);
   }
   if (warn_precision) {
     Rf_warning(
