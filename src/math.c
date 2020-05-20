@@ -28,6 +28,9 @@ sexp tidy64_log10(sexp x) {
     // TODO: Check `x_elt` with `tidy64_to_dbl_from_tidy64_might_lose_precision()`?
     // Would that be too annoying?
 
+    // TODO: Cast to `long double` then cast result to `double`? Would have
+    // better precision on Mac / Linux, but Windows probably maps long double
+    // to double.
     const double elt_out = log10((double) elt);
 
     if (isnan(elt_out)) {
