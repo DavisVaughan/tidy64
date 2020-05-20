@@ -1,11 +1,13 @@
 #include "math.h"
 #include "tidy64.h"
+#include "pack.h"
 
 // [[ include("math.h") ]]
 sexp tidy64_log10(sexp x) {
-  const int64_t* p_x = tidy64_deref(x);
+  const double* p_left = tidy64_get_left_const_deref(x);
+  const double* p_right = tidy64_get_right_const_deref(x);
 
-  r_ssize size = r_length(x);
+  r_ssize size = tidy64_size(x);
 
   sexp out = KEEP(r_new_dbl(size));
   double* p_out = r_dbl_deref(out);
@@ -13,23 +15,26 @@ sexp tidy64_log10(sexp x) {
   bool warn_nan = false;
 
   for (r_ssize i = 0; i < size; ++i) {
-    const int64_t x_elt = p_x[i];
+    const double elt_left = p_left[i];
+    const double elt_right = p_right[i];
 
-    if (tidy64_missing(x_elt)) {
+    if (r_dbl_missing(elt_left)) {
       p_out[i] = r_dbl_na;
       continue;
     }
 
+    const int64_t elt = tidy64_pack(elt_left, elt_right);
+
     // TODO: Check `x_elt` with `tidy64_to_dbl_from_tidy64_might_lose_precision()`?
     // Would that be too annoying?
 
-    const double elt = log10((double) x_elt);
+    const double elt_out = log10((double) elt);
 
-    if (isnan(elt)) {
+    if (isnan(elt_out)) {
       p_out[i] = r_dbl_nan;
       warn_nan = true;
     } else {
-      p_out[i] = elt;
+      p_out[i] = elt_out;
     }
   }
 

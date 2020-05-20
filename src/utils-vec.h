@@ -17,6 +17,12 @@ static inline sexp r_new_dbl(r_ssize size) {
 static inline sexp r_new_chr(r_ssize size) {
   return r_new_vector(r_type_character, size);
 }
+static inline sexp r_new_int(r_ssize size) {
+  return r_new_vector(r_type_integer, size);
+}
+static inline sexp r_new_lgl(r_ssize size) {
+  return r_new_vector(r_type_logical, size);
+}
 
 // -----------------------------------------------------------------------------
 

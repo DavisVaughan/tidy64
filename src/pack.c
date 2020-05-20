@@ -37,12 +37,7 @@ sexp export_tidy64_pack(sexp x) {
     const double elt_left = p_left[i];
     const double elt_right = p_right[i];
 
-    const struct tidy64 elt = {
-      .left = elt_left,
-      .right = elt_right
-    };
-
-    int64_t out_elt = tidy64_pack(elt);
+    int64_t out_elt = tidy64_pack(elt_left, elt_right);
     p_out[i] = (double) out_elt;
   }
 

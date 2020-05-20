@@ -6,13 +6,6 @@
 
 // -----------------------------------------------------------------------------
 
-struct tidy64 {
-  double left;
-  double right;
-};
-
-// -----------------------------------------------------------------------------
-
 // Inlined for performance, since pack/unpack are always used in tight loops.
 
 static inline const struct tidy64 tidy64_unpack(int64_t x) {
@@ -56,10 +49,7 @@ static inline const struct tidy64 tidy64_unpack(int64_t x) {
 
 // -----------------------------------------------------------------------------
 
-static inline int64_t tidy64_pack(const struct tidy64 x) {
-  double left = x.left;
-  double right = x.right;
-
+static inline int64_t tidy64_pack(double left, double right) {
   int32_t left_32 = (int32_t) left;
   uint32_t right_u32 = (uint32_t) right;
 

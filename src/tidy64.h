@@ -49,19 +49,50 @@ static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(double x) {
 
 // -----------------------------------------------------------------------------
 
-static inline int64_t* tidy64_deref(sexp x) {
-  return (int64_t*) DATAPTR(x);
+struct tidy64 {
+  double left;
+  double right;
+};
+
+// -----------------------------------------------------------------------------
+
+static inline sexp tidy64_get_left(sexp x) {
+  return r_list_get(x, 0);
+}
+static inline sexp tidy64_get_right(sexp x) {
+  return r_list_get(x, 1);
+}
+
+static inline const double* tidy64_get_left_const_deref(sexp x) {
+  return r_dbl_const_deref(tidy64_get_left(x));
+}
+static inline const double* tidy64_get_right_const_deref(sexp x) {
+  return r_dbl_const_deref(tidy64_get_right(x));
 }
 
 // -----------------------------------------------------------------------------
 
-static inline bool tidy64_missing(int64_t x) {
-  return x == tidy64_na;
+static inline sexp tidy64_new_left(r_ssize size) {
+  return r_new_dbl(size);
+}
+static inline sexp tidy64_new_right(r_ssize size) {
+  return r_new_dbl(size);
+}
+
+static inline double* tidy64_deref_left(sexp left) {
+  return r_dbl_deref(left);
+}
+static inline double* tidy64_deref_right(sexp right) {
+  return r_dbl_deref(right);
 }
 
 // -----------------------------------------------------------------------------
 
-sexp tidy64_new(r_ssize size);
+static inline r_ssize tidy64_size(sexp x) {
+  return r_length(tidy64_get_left(x));
+}
+
+sexp tidy64_new(sexp left, sexp right);
 
 // -----------------------------------------------------------------------------
 
