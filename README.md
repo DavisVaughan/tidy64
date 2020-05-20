@@ -7,6 +7,8 @@
 
 [![R build
 status](https://github.com/DavisVaughan/tidy64/workflows/R-CMD-check/badge.svg)](https://github.com/DavisVaughan/tidy64/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/DavisVaughan/tidy64/branch/master/graph/badge.svg)](https://codecov.io/gh/DavisVaughan/tidy64?branch=master)
 <!-- badges: end -->
 
 The goal of tidy64 is to …
