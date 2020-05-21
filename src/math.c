@@ -25,8 +25,9 @@ sexp tidy64_log10(sexp x) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    // TODO: Check `x_elt` with `tidy64_to_dbl_from_tidy64_is_oob_precision()`?
-    // Would that be too annoying?
+    // TODO: Could have `tidy64_to_long_dbl_from_tidy64_is_oob_precision()`
+    // which would be a no-op on platforms with long double support. Otherwise
+    // could warn on Windows if OOB.
 
     // TODO: Cast to `long double` then cast result to `double`? Would have
     // better precision on Mac / Linux, but Windows probably maps long double
