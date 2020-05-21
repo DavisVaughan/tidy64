@@ -203,6 +203,32 @@ cnd_body.tidy64_warning_to_int_from_tidy64_oob <- function(cnd, ...) {
 
 # ------------------------------------------------------------------------------
 
+warn_to_dbl_from_tidy64_oob_precision <- function(x) {
+  warn_tidy64(x = x, class = "tidy64_warning_to_dbl_from_tidy64_oob_precision")
+}
+
+#' @export
+cnd_header.tidy64_warning_to_dbl_from_tidy64_oob_precision <- function(cnd, ...) {
+  "Input is outside the range of lossless conversion to double."
+}
+
+#' @export
+cnd_body.tidy64_warning_to_dbl_from_tidy64_oob_precision <- function(cnd, ...) {
+  indicator <- tidy64_detect_to_dbl_from_tidy64_oob_precision(cnd$x)
+  locations <- which(indicator)
+
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
+
+  bullet1 <- "Conversion will proceed, but may be lossy."
+  bullet2 <- glue("Range was exceeded at {locations_string} {locations_collapsed}")
+
+  format_error_bullets(c(i = bullet1, i = bullet2))
+}
+
+# ------------------------------------------------------------------------------
+
 make_locations_string <- function(locations) {
   if (length(locations) == 1L) {
     "location"

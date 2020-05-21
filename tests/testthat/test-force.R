@@ -101,8 +101,10 @@ test_that("no warning when converting doubles above max lossless double to tidy6
 })
 
 test_that("as.double() warns if maybe losing precision", {
-  x <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
-  expect_warning(as.double(x))
+  x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
+  x10 <- rep(x1, 10)
+  expect_warning(as.double(x1))
+  expect_warning(as.double(x10))
 })
 
 # ------------------------------------------------------------------------------
@@ -249,6 +251,12 @@ test_that("force functions have informative errors", {
     as_tidy64(x1)
     as_tidy64(x2)
     as_tidy64(x10)
+
+    "as.double() warns if maybe losing precision"
+    x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
+    x10 <- rep(x1, 10)
+    as.double(x1)
+    as.double(x10)
 
     "# as.integer() warns if outside int range"
     x1 <- as_tidy64(tidy64_global_int_max + 1)

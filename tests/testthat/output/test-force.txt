@@ -36,6 +36,24 @@ i Returning `NA` at the exceeded locations.
 <tidy64[10]>
  [1] NA NA NA NA NA NA NA NA NA NA
 
+> # as.double() warns if maybe losing precision
+> x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
+> x10 <- rep(x1, 10)
+> as.double(x1)
+Warning: Input is outside the range of lossless conversion to double.
+i Conversion will proceed, but may be lossy.
+i Range was exceeded at location 1.
+
+[1] 9.007199e+15
+
+> as.double(x10)
+Warning: Input is outside the range of lossless conversion to double.
+i Conversion will proceed, but may be lossy.
+i Range was exceeded at locations 1, 2, 3, 4, 5, ...
+
+ [1] 9.007199e+15 9.007199e+15 9.007199e+15 9.007199e+15 9.007199e+15
+ [6] 9.007199e+15 9.007199e+15 9.007199e+15 9.007199e+15 9.007199e+15
+
 
 as.integer() warns if outside int range
 =======================================

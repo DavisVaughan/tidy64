@@ -7,6 +7,7 @@
 
 void warn_to_tidy64_from_dbl_oob(sexp x);
 void warn_to_int_from_tidy64_oob(sexp x);
+void warn_to_dbl_from_tidy64_oob_precision(sexp x);
 
 // -----------------------------------------------------------------------------
 

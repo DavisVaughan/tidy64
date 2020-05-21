@@ -82,7 +82,7 @@ sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
   }
 
   if (warn_precision) {
-    Rf_warning("TODO: Lost precision warning");
+    warn_to_dbl_from_tidy64_oob_precision(x);
   }
 
   FREE(1);
