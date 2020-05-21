@@ -32,10 +32,6 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
       Rf_error("TODO: Incompatible type error");
     }
 
-    if (tidy64_to_tidy64_from_dbl_might_lose_precision(elt)) {
-      Rf_error("TODO: Incompatible type error");
-    }
-
     const int64_t elt_64 = (int64_t) elt;
 
     // Catch fractional doubles!

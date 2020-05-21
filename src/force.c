@@ -195,8 +195,6 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
   double* p_right = tidy64_deref_right(right);
 
   bool warn_oob = false;
-  bool warn_precision = false;
-  r_ssize warn_precision_loc = 0;
 
   for (r_ssize i = 0; i < size; ++i) {
     const double elt = p_x[i];
@@ -214,11 +212,6 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
       continue;
     }
 
-    if (!warn_precision && tidy64_to_tidy64_from_dbl_might_lose_precision(elt)) {
-      warn_precision = true;
-      warn_precision_loc = i + 1;
-    }
-
     const int64_t elt_64 = (int64_t) elt;
 
     const struct tidy64 unpacked = tidy64_unpack(elt_64);
@@ -229,14 +222,6 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
 
   if (warn_oob) {
     warn_dbl_is_outside_tidy64_range(x);
-  }
-  if (warn_precision) {
-    Rf_warning(
-      "Element %td is outside the range of double values that can be stored in a tidy64 "
-      "with a guarantee that no precision is lost. Conversion will continue, "
-      "but check the values!",
-      warn_precision_loc
-    );
   }
 
   sexp out = tidy64_new(left, right);

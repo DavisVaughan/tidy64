@@ -83,15 +83,21 @@ test_that("can handle infinity", {
   expect_identical(y, tidy64(NA))
 })
 
-test_that("triggers warning above max / below min lossless double", {
-  x <- as.double(tidy64_global_max_lossless_double_chr)
-  y <- as.double(tidy64_global_min_lossless_double_chr)
+test_that("no warning when converting doubles above max lossless double to tidy64", {
+  # Values like `x + 512 + 1` might not be exactly representable, but the
+  # resuling double of that operation (which is `x + 512`) is a whole number
+  # that can be converted to int64_t losslessly, so no warning is thrown here.
+
+  x <- tidy64_global_max_lossless_double
+  y <- tidy64_global_min_lossless_double
 
   expect_warning(as_tidy64(x), NA)
-  expect_warning(as_tidy64(x + 1))
+  expect_warning(as_tidy64(x + 512), NA)
+  expect_warning(as_tidy64(x + 512 + 1), NA)
 
   expect_warning(as_tidy64(y), NA)
-  expect_warning(as_tidy64(y - 1))
+  expect_warning(as_tidy64(y - 512), NA)
+  expect_warning(as_tidy64(x + 512 - 1), NA)
 })
 
 test_that("as.double() warns if maybe losing precision", {

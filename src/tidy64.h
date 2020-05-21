@@ -46,33 +46,22 @@ static inline bool tidy64_is_outside_int_range(int64_t x) {
 
 // -----------------------------------------------------------------------------
 
-// Maximum double value such that it and all smaller integers can be represented
-// as an integer without loss of precision. It is really 2^53, but we can't tell
-// a FP difference between 2^53 and 2^53+1, so we use 2^53-1 as the largest
-// value.
+// Maximum int64_t value such that it and all smaller integers can be represented
+// in a double loss of precision. It is 2^53.
 // https://stackoverflow.com/questions/1848700/biggest-integer-that-can-be-stored-in-a-double
-#define TIDY64_DBL_MAX_NO_PRECISION_LOSS (9007199254740992.0 - 1.0)
-#define TIDY64_DBL_MIN_NO_PRECISION_LOSS (-TIDY64_DBL_MAX_NO_PRECISION_LOSS)
-
-#define TIDY64_INT64_MAX_NO_PRECISION_LOSS (9007199254740992 - 1)
+#define TIDY64_INT64_MAX_NO_PRECISION_LOSS 9007199254740992
 #define TIDY64_INT64_MIN_NO_PRECISION_LOSS (-TIDY64_INT64_MAX_NO_PRECISION_LOSS)
 
 #define MIGHT_LOSE_PRECISION(X, MAX, MIN) (X < MIN || X > MAX)
 
-static inline bool tidy64_to_tidy64_from_dbl_might_lose_precision(double x) {
-  return MIGHT_LOSE_PRECISION(x, TIDY64_DBL_MAX_NO_PRECISION_LOSS, TIDY64_DBL_MIN_NO_PRECISION_LOSS);
-}
 static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(int64_t x) {
   return MIGHT_LOSE_PRECISION(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
 }
 
-#undef TIDY64_DBL_MAX_NO_PRECISION_LOSS
-#undef TIDY64_DBL_MIN_NO_PRECISION_LOSS
+#undef MIGHT_LOSE_PRECISION
 
 #undef TIDY64_INT64_MAX_NO_PRECISION_LOSS
 #undef TIDY64_INT64_MIN_NO_PRECISION_LOSS
-
-#undef MIGHT_LOSE_PRECISION
 
 // -----------------------------------------------------------------------------
 
