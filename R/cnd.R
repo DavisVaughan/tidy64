@@ -141,6 +141,42 @@ tidy64_detect_to_tidy64_from_dbl_lossy_fractional <- function(x) {
 
 # ------------------------------------------------------------------------------
 
+stop_to_int_from_tidy64_oob <- function(x, to, x_arg = "", to_arg = "") {
+  stop_incompatible_cast(
+    x = x,
+    to = to,
+    x_arg = x_arg,
+    to_arg = to_arg,
+    class = "tidy64_error_to_int_from_tidy64_oob"
+  )
+}
+
+#' @export
+cnd_header.tidy64_error_to_int_from_tidy64_oob <- function(cnd, ...) {
+  cnd$message
+}
+
+#' @export
+cnd_body.tidy64_error_to_int_from_tidy64_oob <- function(cnd, ...) {
+  indicator <- tidy64_detect_to_int_from_tidy64_oob(cnd$x)
+  locations <- which(indicator)
+
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
+
+  bullet1 <- "Input is outside the range of an integer."
+  bullet2 <- glue("Range was exceeded at {locations_string} {locations_collapsed}")
+
+  format_error_bullets(c(i = bullet1, i = bullet2))
+}
+
+tidy64_detect_to_int_from_tidy64_oob <- function(x) {
+  .Call(export_tidy64_detect_to_int_from_tidy64_oob, x)
+}
+
+# ------------------------------------------------------------------------------
+
 make_locations_string <- function(locations) {
   if (length(locations) == 1L) {
     "location"

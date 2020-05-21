@@ -50,6 +50,29 @@ test_that("casting to tidy64 from double is an error if fractional", {
 })
 
 # ------------------------------------------------------------------------------
+# tidy64 <-> integer
+
+test_that("can cast both ways", {
+  expect_identical(vec_cast(tidy64(2), integer()), 2L)
+  expect_identical(vec_cast(2L, new_tidy64()), tidy64(2))
+})
+
+test_that("can cast NA both ways", {
+  expect_identical(vec_cast(tidy64(NA), integer()), NA_integer_)
+  expect_identical(vec_cast(NA_integer_, new_tidy64()), tidy64(NA))
+})
+
+test_that("casting to integer is an error if it is oob", {
+  verify_errors({
+    x1 <- as_tidy64(.Machine$integer.max + 1)
+    x10 <- rep(x1, 10)
+    expect_error(vec_cast(x1, integer()), class = "tidy64_error_to_int_from_tidy64_oob")
+    expect_error(vec_cast(x10, integer()), class = "tidy64_error_to_int_from_tidy64_oob")
+    expect_error(vec_cast(x1, integer(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_int_from_tidy64_oob")
+  })
+})
+
+# ------------------------------------------------------------------------------
 
 test_that("cast methods have informative errors", {
   verify_output(test_path("output", "test-cast.txt"), {
@@ -73,5 +96,12 @@ test_that("cast methods have informative errors", {
     vec_cast(x1, new_tidy64())
     vec_cast(x10, new_tidy64())
     vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to")
+
+    "# casting to integer is an error if it is oob"
+    x1 <- as_tidy64(.Machine$integer.max + 1)
+    x10 <- rep(x1, 10)
+    vec_cast(x1, integer())
+    vec_cast(x10, integer())
+    vec_cast(x1, integer(), x_arg = "x", to_arg = "to")
   })
 })

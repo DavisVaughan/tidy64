@@ -55,3 +55,24 @@ i Lossy conversion from fractional value at locations 1, 2, 3, 4, 5, ...
 Error: Can't convert `x` <double> to match type of `to` <tidy64>.
 i Lossy conversion from fractional value at location 1.
 
+
+casting to integer is an error if it is oob
+===========================================
+
+> x1 <- as_tidy64(.Machine$integer.max + 1)
+> x10 <- rep(x1, 10)
+> vec_cast(x1, integer())
+Error: Can't convert <tidy64> to <integer>.
+i Input is outside the range of an integer.
+i Range was exceeded at location 1.
+
+> vec_cast(x10, integer())
+Error: Can't convert <tidy64> to <integer>.
+i Input is outside the range of an integer.
+i Range was exceeded at locations 1, 2, 3, 4, 5, ...
+
+> vec_cast(x1, integer(), x_arg = "x", to_arg = "to")
+Error: Can't convert `x` <tidy64> to match type of `to` <integer>.
+i Input is outside the range of an integer.
+i Range was exceeded at location 1.
+

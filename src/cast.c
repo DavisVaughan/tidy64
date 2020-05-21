@@ -122,7 +122,7 @@ sexp export_tidy64_cast_to_dbl_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_
 // -----------------------------------------------------------------------------
 
 // [[ include("cast.h") ]]
-sexp tidy64_cast_to_int_from_tidy64(sexp x) {
+sexp tidy64_cast_to_int_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_arg) {
   const double* p_left = tidy64_get_left_const_deref(x);
   const double* p_right = tidy64_get_right_const_deref(x);
 
@@ -143,7 +143,7 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x) {
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
     if (tidy64_to_int_from_tidy64_is_oob(elt)) {
-      Rf_error("TODO: Incompatible type error.");
+      stop_to_int_from_tidy64_oob(x, to, x_arg, to_arg);
     }
 
     p_out[i] = (int) elt;
@@ -154,8 +154,8 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x) {
 }
 
 // [[ include("cast.h") ]]
-sexp export_tidy64_cast_to_int_from_tidy64(sexp x) {
-  return tidy64_cast_to_int_from_tidy64(x);
+sexp export_tidy64_cast_to_int_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_arg) {
+  return tidy64_cast_to_int_from_tidy64(x, to, x_arg, to_arg);
 }
 
 // -----------------------------------------------------------------------------
