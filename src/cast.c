@@ -103,8 +103,8 @@ sexp tidy64_cast_to_dbl_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_arg) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    if (tidy64_to_dbl_from_tidy64_might_lose_precision(elt)) {
-      stop_to_dbl_from_tidy64_might_lose_precision(x, to, x_arg, to_arg);
+    if (tidy64_to_dbl_from_tidy64_is_oob_precision(elt)) {
+      stop_to_dbl_from_tidy64_oob_precision(x, to, x_arg, to_arg);
     }
 
     p_out[i] = (double) elt;

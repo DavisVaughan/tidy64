@@ -46,7 +46,7 @@ static inline bool tidy64_to_tidy64_from_dbl_is_oob(double x) {
   return IS_OOB(x, TIDY64_MAX_DBL, TIDY64_MIN_DBL);
 }
 
-static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(int64_t x) {
+static inline bool tidy64_to_dbl_from_tidy64_is_oob_precision(int64_t x) {
   return IS_OOB(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
 }
 

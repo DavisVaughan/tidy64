@@ -74,7 +74,7 @@ sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    if (!warn_precision && tidy64_to_dbl_from_tidy64_might_lose_precision(elt)) {
+    if (!warn_precision && tidy64_to_dbl_from_tidy64_is_oob_precision(elt)) {
       warn_precision = true;
     }
 

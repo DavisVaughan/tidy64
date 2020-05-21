@@ -23,9 +23,9 @@ test_that("casting to double is an error if it might lose precision", {
   verify_errors({
     x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
     x10 <- rep(x1, 10)
-    expect_error(vec_cast(x1, double()), class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision")
-    expect_error(vec_cast(x10, double()), class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision")
-    expect_error(vec_cast(x1, double(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision")
+    expect_error(vec_cast(x1, double()), class = "tidy64_error_to_dbl_from_tidy64_oob_precision")
+    expect_error(vec_cast(x10, double()), class = "tidy64_error_to_dbl_from_tidy64_oob_precision")
+    expect_error(vec_cast(x1, double(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_dbl_from_tidy64_oob_precision")
   })
 })
 

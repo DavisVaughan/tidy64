@@ -69,24 +69,24 @@ cnd_body.tidy64_error_to_tidy64_from_dbl_oob <- function(cnd, ...) {
 
 # ------------------------------------------------------------------------------
 
-stop_to_dbl_from_tidy64_might_lose_precision <- function(x, to, x_arg = "", to_arg = "") {
+stop_to_dbl_from_tidy64_oob_precision <- function(x, to, x_arg = "", to_arg = "") {
   stop_incompatible_cast(
     x = x,
     to = to,
     x_arg = x_arg,
     to_arg = to_arg,
-    class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision"
+    class = "tidy64_error_to_dbl_from_tidy64_oob_precision"
   )
 }
 
 #' @export
-cnd_header.tidy64_error_to_dbl_from_tidy64_might_lose_precision <- function(cnd, ...) {
+cnd_header.tidy64_error_to_dbl_from_tidy64_oob_precision <- function(cnd, ...) {
   cnd$message
 }
 
 #' @export
-cnd_body.tidy64_error_to_dbl_from_tidy64_might_lose_precision <- function(cnd, ...) {
-  indicator <- tidy64_detect_to_dbl_from_tidy64_might_lose_precision(cnd$x)
+cnd_body.tidy64_error_to_dbl_from_tidy64_oob_precision <- function(cnd, ...) {
+  indicator <- tidy64_detect_to_dbl_from_tidy64_oob_precision(cnd$x)
   locations <- which(indicator)
 
   locations_string <- make_locations_string(locations)
@@ -99,8 +99,8 @@ cnd_body.tidy64_error_to_dbl_from_tidy64_might_lose_precision <- function(cnd, .
   bullet
 }
 
-tidy64_detect_to_dbl_from_tidy64_might_lose_precision <- function(x) {
-  .Call(export_tidy64_detect_to_dbl_from_tidy64_might_lose_precision, x)
+tidy64_detect_to_dbl_from_tidy64_oob_precision <- function(x) {
+  .Call(export_tidy64_detect_to_dbl_from_tidy64_oob_precision, x)
 }
 
 # ------------------------------------------------------------------------------

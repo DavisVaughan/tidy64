@@ -55,7 +55,7 @@ void stop_to_tidy64_from_dbl_oob(sexp x, sexp to, sexp x_arg, sexp to_arg) {
 
 // [[ include("cnd.h") ]]
 __attribute__((noreturn))
-void stop_to_dbl_from_tidy64_might_lose_precision(sexp x, sexp to, sexp x_arg, sexp to_arg) {
+void stop_to_dbl_from_tidy64_oob_precision(sexp x, sexp to, sexp x_arg, sexp to_arg) {
   sexp syms[5] = {
     syms_x,
     syms_to,
@@ -72,13 +72,13 @@ void stop_to_dbl_from_tidy64_might_lose_precision(sexp x, sexp to, sexp x_arg, s
     NULL
   };
 
-  sexp call = KEEP(r_call(syms_stop_to_dbl_from_tidy64_might_lose_precision, syms, args));
+  sexp call = KEEP(r_call(syms_stop_to_dbl_from_tidy64_oob_precision, syms, args));
   r_eval(call, tidy64_ns_env);
 
-  never_reached("stop_to_dbl_from_tidy64_might_lose_precision");
+  never_reached("stop_to_dbl_from_tidy64_oob_precision");
 }
 
-static sexp tidy64_detect_to_dbl_from_tidy64_might_lose_precision(sexp x) {
+static sexp tidy64_detect_to_dbl_from_tidy64_oob_precision(sexp x) {
   const double* p_left = tidy64_get_left_const_deref(x);
   const double* p_right = tidy64_get_right_const_deref(x);
 
@@ -98,7 +98,7 @@ static sexp tidy64_detect_to_dbl_from_tidy64_might_lose_precision(sexp x) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    p_out[i] = tidy64_to_dbl_from_tidy64_might_lose_precision(elt);
+    p_out[i] = tidy64_to_dbl_from_tidy64_is_oob_precision(elt);
   }
 
   FREE(1);
@@ -106,8 +106,8 @@ static sexp tidy64_detect_to_dbl_from_tidy64_might_lose_precision(sexp x) {
 }
 
 // [[ include("cnd.h") ]]
-sexp export_tidy64_detect_to_dbl_from_tidy64_might_lose_precision(sexp x) {
-  return tidy64_detect_to_dbl_from_tidy64_might_lose_precision(x);
+sexp export_tidy64_detect_to_dbl_from_tidy64_oob_precision(sexp x) {
+  return tidy64_detect_to_dbl_from_tidy64_oob_precision(x);
 }
 
 // -----------------------------------------------------------------------------
