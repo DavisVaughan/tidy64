@@ -50,7 +50,7 @@ static inline bool tidy64_to_dbl_from_tidy64_is_oob_precision(int64_t x) {
   return IS_OOB(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
 }
 
-static inline bool tidy64_is_outside_int_range(int64_t x) {
+static inline bool tidy64_to_int_from_tidy64_is_oob(int64_t x) {
   return IS_OOB(x, R_INT_MAX, R_INT_MIN);
 }
 

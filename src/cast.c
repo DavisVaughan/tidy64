@@ -142,7 +142,7 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    if (tidy64_is_outside_int_range(elt)) {
+    if (tidy64_to_int_from_tidy64_is_oob(elt)) {
       Rf_error("TODO: Incompatible type error.");
     }
 

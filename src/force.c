@@ -119,7 +119,7 @@ sexp tidy64_force_to_int_from_tidy64(sexp x) {
 
     const int64_t elt = tidy64_pack(elt_left, elt_right);
 
-    if (tidy64_is_outside_int_range(elt)) {
+    if (tidy64_to_int_from_tidy64_is_oob(elt)) {
       p_out[i] = r_int_na;
       warn_na = true;
       continue;
