@@ -28,8 +28,8 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
       continue;
     }
 
-    if (tidy64_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(elt)) {
-      stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(x, to, x_arg, to_arg);
+    if (tidy64_to_tidy64_from_dbl_oob(elt)) {
+      stop_to_tidy64_from_dbl_oob(x, to, x_arg, to_arg);
     }
 
     const int64_t elt_64 = (int64_t) elt;

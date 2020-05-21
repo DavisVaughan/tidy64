@@ -69,7 +69,7 @@ sexp export_tidy64_unpack(sexp x) {
   for (r_ssize i = 0; i < size; ++i) {
     const double x_elt = p_x[i];
 
-    if (tidy64_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(x_elt)) {
+    if (tidy64_to_tidy64_from_dbl_oob(x_elt)) {
       p_left[i] = r_dbl_na;
       p_right[i] = r_dbl_na;
       warn_oob = true;

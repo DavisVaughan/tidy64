@@ -205,7 +205,7 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
       continue;
     }
 
-    if (tidy64_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(elt)) {
+    if (tidy64_to_tidy64_from_dbl_oob(elt)) {
       warn_oob = true;
       p_left[i] = r_dbl_na;
       p_right[i] = r_dbl_na;

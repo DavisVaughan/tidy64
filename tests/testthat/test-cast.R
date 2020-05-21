@@ -33,9 +33,9 @@ test_that("casting to tidy64 from double is an error if OOB", {
   verify_errors({
     x1 <- .Machine$double.xmax
     x10 <- rep(x1, 10)
-    expect_error(vec_cast(x1, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range")
-    expect_error(vec_cast(x10, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range")
-    expect_error(vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range")
+    expect_error(vec_cast(x1, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_oob")
+    expect_error(vec_cast(x10, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_oob")
+    expect_error(vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_tidy64_from_dbl_oob")
   })
 })
 
