@@ -37,7 +37,7 @@ static inline sexp r_chr_get(sexp x, r_ssize i) {
   return STRING_PTR(x)[i];
 }
 static inline void r_chr_set(sexp x, r_ssize i, sexp value) {
-  return SET_STRING_ELT(x, i, value);
+  SET_STRING_ELT(x, i, value);
 }
 
 // -----------------------------------------------------------------------------
