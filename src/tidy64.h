@@ -51,22 +51,28 @@ static inline bool tidy64_is_outside_int_range(int64_t x) {
 // a FP difference between 2^53 and 2^53+1, so we use 2^53-1 as the largest
 // value.
 // https://stackoverflow.com/questions/1848700/biggest-integer-that-can-be-stored-in-a-double
-#define DBL_MAX_NO_PRECISION_LOSS (9007199254740992.0 - 1.0)
-#define DBL_MIN_NO_PRECISION_LOSS (-DBL_MAX_NO_PRECISION_LOSS)
+#define TIDY64_DBL_MAX_NO_PRECISION_LOSS (9007199254740992.0 - 1.0)
+#define TIDY64_DBL_MIN_NO_PRECISION_LOSS (-TIDY64_DBL_MAX_NO_PRECISION_LOSS)
 
-#define MIGHT_LOSE_PRECISION(X) (X < DBL_MIN_NO_PRECISION_LOSS || X > DBL_MAX_NO_PRECISION_LOSS)
+#define TIDY64_INT64_MAX_NO_PRECISION_LOSS (9007199254740992 - 1)
+#define TIDY64_INT64_MIN_NO_PRECISION_LOSS (-TIDY64_INT64_MAX_NO_PRECISION_LOSS)
+
+#define MIGHT_LOSE_PRECISION(X, MAX, MIN) (X < MIN || X > MAX)
 
 static inline bool tidy64_to_tidy64_from_dbl_might_lose_precision(double x) {
-  return MIGHT_LOSE_PRECISION(x);
+  return MIGHT_LOSE_PRECISION(x, TIDY64_DBL_MAX_NO_PRECISION_LOSS, TIDY64_DBL_MIN_NO_PRECISION_LOSS);
 }
-static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(double x) {
-  return MIGHT_LOSE_PRECISION(x);
+static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(int64_t x) {
+  return MIGHT_LOSE_PRECISION(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
 }
+
+#undef TIDY64_DBL_MAX_NO_PRECISION_LOSS
+#undef TIDY64_DBL_MIN_NO_PRECISION_LOSS
+
+#undef TIDY64_INT64_MAX_NO_PRECISION_LOSS
+#undef TIDY64_INT64_MIN_NO_PRECISION_LOSS
 
 #undef MIGHT_LOSE_PRECISION
-
-#undef DBL_MAX_NO_PRECISION_LOSS
-#undef DBL_MIN_NO_PRECISION_LOSS
 
 // -----------------------------------------------------------------------------
 
