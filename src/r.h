@@ -3,15 +3,39 @@
 
 // -----------------------------------------------------------------------------
 
-#define R_NO_REMAP
-#include <R.h>
-#include <Rinternals.h>
+// From: https://rpg.hamsterrepublic.com/source/wip/config.h
+// This causes MinGW and MinGW-w64 (Windows) to switch to C99-compliant
+// printf and scanf family functions (i.e., this causes __USE_MINGW_ANSI_STDIO
+// to be defined).
+
+// According to https://svn.python.org/projects/python/trunk/configure,
+// defining _POSIX_C_SOURCE causes lots of broken stuff on virtually every Unix,
+// so only set it on MinGW.
+
+// This must be defined before loading in <R.h> or <Rinternals.h> because
+// they seem to also include <stdio.h>.
+
+#ifdef __MINGW32__  // MinGW or MinGW-w64
+# define _POSIX_C_SOURCE 200809L
+#endif
+
+// To link in printf() / scanf() with C99-compliant features
+// (i.e. the ability to use %lli which is expanded from %PRId64)
+#include <stdio.h>
+
+// -----------------------------------------------------------------------------
 
 // For int64_t
-#include <inttypes.h>
+#include <stdint.h>
 
 // For bool
 #include <stdbool.h>
+
+// -----------------------------------------------------------------------------
+
+#define R_NO_REMAP
+#include <R.h>
+#include <Rinternals.h>
 
 // -----------------------------------------------------------------------------
 

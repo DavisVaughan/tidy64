@@ -6,6 +6,9 @@
 #include <errno.h>
 #include <ctype.h>
 
+// For PRId64
+#include <inttypes.h>
+
 // -----------------------------------------------------------------------------
 
 // [[ include("force.h") ]]

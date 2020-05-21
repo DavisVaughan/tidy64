@@ -1,6 +1,11 @@
 #include "globals.h"
 #include "tidy64.h"
 
+// For PRId64
+#include <inttypes.h>
+
+// -----------------------------------------------------------------------------
+
 static sexp convert_int64_to_chr(int64_t x) {
   char c_string[TIDY64_MAX_PRINT_SIZE];
 
