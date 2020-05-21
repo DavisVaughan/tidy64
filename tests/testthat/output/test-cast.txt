@@ -1,0 +1,18 @@
+
+casting to double is an error if it might lose precision
+========================================================
+
+> x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
+> x10 <- rep(x1, 10)
+> vec_cast(x1, double())
+Error: Can't convert <tidy64> to <double>.
+i Precision may be lost at location 1.
+
+> vec_cast(x10, double())
+Error: Can't convert <tidy64> to <double>.
+i Precision may be lost at locations 1, 2, 3, 4, 5, ...
+
+> vec_cast(x1, double(), x_arg = "x", to_arg = "to")
+Error: Can't convert `x` <tidy64> to match type of `to` <double>.
+i Precision may be lost at location 1.
+

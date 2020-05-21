@@ -18,11 +18,11 @@ tidy64_cast_to_tidy64_from_dbl <- function(x) {
 
 #' @export
 vec_cast.double.tidy64 <- function(x, to, ..., x_arg = "", to_arg = "") {
-  tidy64_cast_to_dbl_from_tidy64(x)
+  tidy64_cast_to_dbl_from_tidy64(x, to, x_arg = x_arg, to_arg = to_arg)
 }
 
-tidy64_cast_to_dbl_from_tidy64 <- function(x) {
-  .Call(export_tidy64_cast_to_dbl_from_tidy64, x)
+tidy64_cast_to_dbl_from_tidy64 <- function(x, to, ..., x_arg = "", to_arg = "") {
+  .Call(export_tidy64_cast_to_dbl_from_tidy64, x, to, x_arg, to_arg)
 }
 
 # ------------------------------------------------------------------------------

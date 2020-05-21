@@ -9,4 +9,13 @@ void warn_dbl_is_outside_tidy64_range(sexp x);
 
 // -----------------------------------------------------------------------------
 
+__attribute__((noreturn))
+void stop_to_dbl_from_tidy64_might_lose_precision(sexp x, sexp to, sexp x_arg, sexp to_arg);
+
+// -----------------------------------------------------------------------------
+
+sexp export_tidy64_detect_to_dbl_from_tidy64_might_lose_precision(sexp x);
+
+// -----------------------------------------------------------------------------
+
 #endif

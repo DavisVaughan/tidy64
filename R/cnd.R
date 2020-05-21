@@ -24,22 +24,52 @@ cnd_body.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
   indicator <- x > tidy64_global_max_dbl() | x < tidy64_global_min_dbl()
   locations <- which(indicator)
 
-  if (length(locations) == 1L) {
-    loc_chr <- "location"
-  } else {
-    loc_chr <- "locations"
-  }
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
 
-  locations <- collapse_locations(locations)
-  locations <- ensure_full_stop(locations)
-
-  bullet1 <- glue("Range was exceeded at {loc_chr} {locations}")
+  bullet1 <- glue("Range was exceeded at {locations_string} {locations_collapsed}")
   bullet2 <- "Returning `NA` at the exceeded locations."
 
   format_error_bullets(c(i = bullet1, i = bullet2))
 }
 
 # ------------------------------------------------------------------------------
+
+stop_to_dbl_from_tidy64_might_lose_precision <- function(x, to, x_arg = "", to_arg = "") {
+  indicator <- tidy64_detect_to_dbl_from_tidy64_might_lose_precision(x)
+  locations <- which(indicator)
+
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
+
+  bullet <- glue("Precision may be lost at {locations_string} {locations_collapsed}")
+  bullet <- format_error_bullets(c(i = bullet))
+
+  stop_incompatible_cast(
+    x = x,
+    to = to,
+    x_arg = x_arg,
+    to_arg = to_arg,
+    details = bullet,
+    class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision"
+  )
+}
+
+tidy64_detect_to_dbl_from_tidy64_might_lose_precision <- function(x) {
+  .Call(export_tidy64_detect_to_dbl_from_tidy64_might_lose_precision, x)
+}
+
+# ------------------------------------------------------------------------------
+
+make_locations_string <- function(locations) {
+  if (length(locations) == 1L) {
+    "location"
+  } else {
+    "locations"
+  }
+}
 
 collapse_locations <- function(locations) {
   if (length(locations) > 5L) {

@@ -14,6 +14,9 @@ delayedAssign("tidy64_global_min_lossless_double_chr", "-9007199254740991") # -2
 delayedAssign("tidy64_global_max_lossless_double_plus_one_chr", "9007199254740992") # 2^53
 delayedAssign("tidy64_global_min_lossless_double_minus_one_chr", "-9007199254740992") # -2^53
 
+delayedAssign("tidy64_global_max_lossless_double", 9007199254740991)
+delayedAssign("tidy64_global_min_lossless_double", -9007199254740991)
+
 # ------------------------------------------------------------------------------
 
 tidy64_global_max_as_chr <- function() {
