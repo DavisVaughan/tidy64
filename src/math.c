@@ -45,6 +45,9 @@ sexp tidy64_log10(sexp x) {
     Rf_warning("TODO: Warning NaN produced!");
   }
 
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
+
   FREE(1);
   return out;
 }
