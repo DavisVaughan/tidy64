@@ -3,8 +3,9 @@
 #include "pack.h"
 #include "cnd.h"
 #include "tidy64.h"
+
+// For `errno`
 #include <errno.h>
-#include <ctype.h>
 
 // For PRId64
 #include <inttypes.h>
