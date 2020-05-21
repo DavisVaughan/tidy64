@@ -28,7 +28,7 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
       continue;
     }
 
-    if (tidy64_to_tidy64_from_dbl_oob(elt)) {
+    if (tidy64_to_tidy64_from_dbl_is_oob(elt)) {
       stop_to_tidy64_from_dbl_oob(x, to, x_arg, to_arg);
     }
 

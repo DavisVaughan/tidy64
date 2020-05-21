@@ -42,7 +42,7 @@
 
 #define IS_OOB(X, MAX, MIN) (X < MIN || X > MAX)
 
-static inline bool tidy64_to_tidy64_from_dbl_oob(double x) {
+static inline bool tidy64_to_tidy64_from_dbl_is_oob(double x) {
   return IS_OOB(x, TIDY64_MAX_DBL, TIDY64_MIN_DBL);
 }
 
