@@ -24,44 +24,37 @@
 #define TIDY64_MAX_DBL 9223372036854774784.0
 #define TIDY64_MIN_DBL (-TIDY64_MAX_DBL)
 
-#define R_INT_MAX INT_MAX
-#define R_INT_MIN (INT_MIN + 1)
-
-// -----------------------------------------------------------------------------
-
-// - 19 comes from printing out `INT64_MAX` and counting the number of digits
-// - `+ 1` because it could be negative and have a `-`
-// - TODO: And `+ 1` for trailing null?
-#define TIDY64_MAX_PRINT_SIZE (19 + 1 + 1)
-
-// -----------------------------------------------------------------------------
-
-static inline bool tidy64_to_tidy64_from_dbl_oob(double x) {
-  return x < TIDY64_MIN_DBL || x > TIDY64_MAX_DBL;
-}
-
-static inline bool tidy64_is_outside_int_range(int64_t x) {
-  return x < R_INT_MIN || x > R_INT_MAX;
-}
-
-// -----------------------------------------------------------------------------
-
 // Maximum int64_t value such that it and all smaller integers can be represented
 // in a double loss of precision. It is 2^53.
 // https://stackoverflow.com/questions/1848700/biggest-integer-that-can-be-stored-in-a-double
 #define TIDY64_INT64_MAX_NO_PRECISION_LOSS 9007199254740992
 #define TIDY64_INT64_MIN_NO_PRECISION_LOSS (-TIDY64_INT64_MAX_NO_PRECISION_LOSS)
 
-#define MIGHT_LOSE_PRECISION(X, MAX, MIN) (X < MIN || X > MAX)
+// - 19 comes from printing out `INT64_MAX` and counting the number of digits
+// - `+ 1` because it could be negative and have a `-`
+// - TODO: And `+ 1` for trailing null?
+#define TIDY64_MAX_PRINT_SIZE (19 + 1 + 1)
 
-static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(int64_t x) {
-  return MIGHT_LOSE_PRECISION(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
+#define R_INT_MAX INT_MAX
+#define R_INT_MIN (INT_MIN + 1)
+
+// -----------------------------------------------------------------------------
+
+#define IS_OOB(X, MAX, MIN) (X < MIN || X > MAX)
+
+static inline bool tidy64_to_tidy64_from_dbl_oob(double x) {
+  return IS_OOB(x, TIDY64_MAX_DBL, TIDY64_MIN_DBL);
 }
 
-#undef MIGHT_LOSE_PRECISION
+static inline bool tidy64_to_dbl_from_tidy64_might_lose_precision(int64_t x) {
+  return IS_OOB(x, TIDY64_INT64_MAX_NO_PRECISION_LOSS, TIDY64_INT64_MIN_NO_PRECISION_LOSS);
+}
 
-#undef TIDY64_INT64_MAX_NO_PRECISION_LOSS
-#undef TIDY64_INT64_MIN_NO_PRECISION_LOSS
+static inline bool tidy64_is_outside_int_range(int64_t x) {
+  return IS_OOB(x, R_INT_MAX, R_INT_MIN);
+}
+
+#undef IS_OOB
 
 // -----------------------------------------------------------------------------
 
