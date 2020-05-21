@@ -6,7 +6,7 @@
 // -----------------------------------------------------------------------------
 
 // [[ include("cnd.h") ]]
-void warn_dbl_is_outside_tidy64_range(sexp x) {
+void warn_to_tidy64_from_dbl_oob(sexp x) {
   sexp syms[2] = {
     syms_x,
     NULL
@@ -17,7 +17,7 @@ void warn_dbl_is_outside_tidy64_range(sexp x) {
     NULL
   };
 
-  sexp call = KEEP(r_call(syms_warn_dbl_is_outside_tidy64_range, syms, args));
+  sexp call = KEEP(r_call(syms_warn_to_tidy64_from_dbl_oob, syms, args));
   r_eval(call, tidy64_ns_env);
 
   UNPROTECT(2);

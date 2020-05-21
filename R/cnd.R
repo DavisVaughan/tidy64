@@ -9,17 +9,17 @@ conditionMessage.tidy64_warning <- function(c) {
 
 # ------------------------------------------------------------------------------
 
-warn_dbl_is_outside_tidy64_range <- function(x) {
-  warn_tidy64(x = x, class = "tidy64_warning_dbl_is_outside_tidy64_range")
+warn_to_tidy64_from_dbl_oob <- function(x) {
+  warn_tidy64(x = x, class = "tidy64_warning_to_tidy64_from_dbl_oob")
 }
 
 #' @export
-cnd_header.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
+cnd_header.tidy64_warning_to_tidy64_from_dbl_oob <- function(cnd, ...) {
   "Input is outside the range of a tidy64."
 }
 
 #' @export
-cnd_body.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
+cnd_body.tidy64_warning_to_tidy64_from_dbl_oob <- function(cnd, ...) {
   x <- cnd$x
   indicator <- x > tidy64_global_max_dbl() | x < tidy64_global_min_dbl()
   locations <- which(indicator)

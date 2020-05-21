@@ -85,7 +85,7 @@ sexp export_tidy64_unpack(sexp x) {
   }
 
   if (warn_oob) {
-    warn_dbl_is_outside_tidy64_range(x);
+    warn_to_tidy64_from_dbl_oob(x);
   }
 
   sexp out = KEEP(r_new_vector(r_type_list, 2));
