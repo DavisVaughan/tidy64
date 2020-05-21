@@ -1,5 +1,5 @@
 Package: tidy64
-Title: What the Package Does (One Line, Title Case)
+Title: An S3 Class Supporting 64-bit Integers
 Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Davis",
@@ -10,16 +10,16 @@ Authors@R:
              role = "cph"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
+URL: https://github.com/DavisVaughan/tidy64
+BugReports: https://github.com/DavisVaughan/tidy64/issues
 Imports: 
     glue,
     rlang,
     vctrs (>= 0.3.0)
 Suggests: 
-    testthat,
-    covr
+    covr,
+    testthat
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
-URL: https://github.com/DavisVaughan/tidy64
-BugReports: https://github.com/DavisVaughan/tidy64/issues
