@@ -1,0 +1,9 @@
+
+names print out
+===============
+
+> set_names(tidy64(1), "x")
+<tidy64[1]>
+x 
+1 
+
