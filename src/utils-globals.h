@@ -13,6 +13,7 @@ extern sexp syms_x;
 extern sexp syms_to;
 extern sexp syms_x_arg;
 extern sexp syms_to_arg;
+extern sexp syms_tidy64_names;
 extern sexp syms_warn_to_tidy64_from_dbl_oob;
 extern sexp syms_warn_to_int_from_tidy64_oob;
 extern sexp syms_warn_to_dbl_from_tidy64_oob_precision;

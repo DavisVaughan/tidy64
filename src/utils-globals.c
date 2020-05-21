@@ -12,6 +12,7 @@ sexp syms_x = NULL;
 sexp syms_to = NULL;
 sexp syms_x_arg = NULL;
 sexp syms_to_arg = NULL;
+sexp syms_tidy64_names = NULL;
 sexp syms_warn_to_tidy64_from_dbl_oob = NULL;
 sexp syms_warn_to_int_from_tidy64_oob = NULL;
 sexp syms_warn_to_dbl_from_tidy64_oob_precision = NULL;
@@ -41,6 +42,7 @@ void tidy64_initialize_utils_globals(sexp ns) {
   syms_to = Rf_install("to");
   syms_x_arg = Rf_install("x_arg");
   syms_to_arg = Rf_install("to_arg");
+  syms_tidy64_names = Rf_install("tidy64:::names");
   syms_warn_to_tidy64_from_dbl_oob = Rf_install("warn_to_tidy64_from_dbl_oob");
   syms_warn_to_int_from_tidy64_oob = Rf_install("warn_to_int_from_tidy64_oob");
   syms_warn_to_dbl_from_tidy64_oob_precision = Rf_install("warn_to_dbl_from_tidy64_oob_precision");

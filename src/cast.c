@@ -45,9 +45,12 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
     p_right[i] = unpacked.right;
   }
 
-  sexp out = tidy64_new(left, right);
+  sexp out = KEEP(tidy64_new(left, right));
 
-  FREE(2);
+  sexp names = r_peek_names(x);
+  tidy64_poke_names(out, names);
+
+  FREE(3);
   return out;
 }
 
@@ -110,6 +113,9 @@ sexp tidy64_cast_to_dbl_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_arg) {
     p_out[i] = (double) elt;
   }
 
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
+
   FREE(1);
   return out;
 }
@@ -148,6 +154,9 @@ sexp tidy64_cast_to_int_from_tidy64(sexp x, sexp to, sexp x_arg, sexp to_arg) {
 
     p_out[i] = (int) elt;
   }
+
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
 
   FREE(1);
   return out;
@@ -192,6 +201,9 @@ sexp tidy64_cast_to_lgl_from_tidy64(sexp x) {
       Rf_error("TODO: Incompatible type error.");
     }
   }
+
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
 
   FREE(1);
   return out;

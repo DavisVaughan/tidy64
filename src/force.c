@@ -40,6 +40,9 @@ sexp tidy64_force_to_chr_from_tidy64(sexp x) {
     p_out[i] = r_new_string(c_string);
   }
 
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
+
   FREE(1);
   return out;
 }
@@ -84,6 +87,9 @@ sexp tidy64_force_to_dbl_from_tidy64(sexp x) {
   if (warn_precision) {
     warn_to_dbl_from_tidy64_oob_precision(x);
   }
+
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
 
   FREE(1);
   return out;
@@ -132,6 +138,9 @@ sexp tidy64_force_to_int_from_tidy64(sexp x) {
     warn_to_int_from_tidy64_oob(x);
   }
 
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
+
   FREE(1);
   return out;
 }
@@ -170,6 +179,9 @@ sexp tidy64_force_to_lgl_from_tidy64(sexp x) {
       p_out[i] = 1;
     }
   }
+
+  sexp names = tidy64_peek_names(x);
+  r_poke_names(out, names);
 
   FREE(1);
   return out;
@@ -224,9 +236,12 @@ sexp tidy64_force_to_tidy64_from_dbl(sexp x) {
     warn_to_tidy64_from_dbl_oob(x);
   }
 
-  sexp out = tidy64_new(left, right);
+  sexp out = KEEP(tidy64_new(left, right));
 
-  FREE(2);
+  sexp names = r_peek_names(x);
+  tidy64_poke_names(out, names);
+
+  FREE(3);
   return out;
 }
 
@@ -266,9 +281,12 @@ sexp tidy64_force_to_tidy64_from_int(sexp x) {
     p_right[i] = unpacked.right;
   }
 
-  sexp out = tidy64_new(left, right);
+  sexp out = KEEP(tidy64_new(left, right));
 
-  FREE(2);
+  sexp names = r_peek_names(x);
+  tidy64_poke_names(out, names);
+
+  FREE(3);
   return out;
 }
 
@@ -312,9 +330,12 @@ sexp tidy64_force_to_tidy64_from_lgl(sexp x) {
     }
   }
 
-  sexp out = tidy64_new(left, right);
+  sexp out = KEEP(tidy64_new(left, right));
 
-  FREE(2);
+  sexp names = r_peek_names(x);
+  tidy64_poke_names(out, names);
+
+  FREE(3);
   return out;
 }
 
@@ -414,9 +435,12 @@ sexp tidy64_force_to_tidy64_from_chr(sexp x) {
     Rf_warning("TODO: Warn lossy parse");
   }
 
-  sexp out = tidy64_new(left, right);
+  sexp out = KEEP(tidy64_new(left, right));
 
-  FREE(2);
+  sexp names = r_peek_names(x);
+  tidy64_poke_names(out, names);
+
+  FREE(3);
   return out;
 }
 

@@ -19,6 +19,11 @@ test_that("can cast NA both ways", {
   expect_identical(vec_cast(NA_real_, new_tidy64()), tidy64(NA))
 })
 
+test_that("keeps names", {
+  expect_named(vec_cast(set_names(tidy64(1)), double()), "1")
+  expect_named(vec_cast(set_names(1), tidy64()), "1")
+})
+
 test_that("casting to double is an error if it might lose precision", {
   verify_errors({
     x1 <- as_tidy64(tidy64_global_max_lossless_double_plus_one_chr)
@@ -60,6 +65,11 @@ test_that("can cast both ways", {
 test_that("can cast NA both ways", {
   expect_identical(vec_cast(tidy64(NA), integer()), NA_integer_)
   expect_identical(vec_cast(NA_integer_, new_tidy64()), tidy64(NA))
+})
+
+test_that("keeps names", {
+  expect_named(vec_cast(set_names(tidy64(1)), integer()), "1")
+  expect_named(vec_cast(set_names(1L), tidy64()), "1")
 })
 
 test_that("casting to integer is an error if it is oob", {

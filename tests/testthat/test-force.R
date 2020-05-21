@@ -15,6 +15,11 @@ test_that("can roundtrip basic doubles", {
   expect_identical(as.double(as_tidy64(x)), x)
 })
 
+test_that("keeps names", {
+  expect_named(as.double(set_names(tidy64(1))), "1")
+  expect_named(as_tidy64(set_names(1)), "1")
+})
+
 test_that("can roundtrip zero", {
   expect_identical(as.double(as_tidy64(0)), 0)
 })
@@ -110,9 +115,14 @@ test_that("as.double() warns if maybe losing precision", {
 # ------------------------------------------------------------------------------
 # as_tidy64(<integer>) / as.integer()
 
-test_that("can roundtrip basic doubles", {
+test_that("can roundtrip basic integers", {
   x <- c(-2L, -1L, 1L, 2L)
   expect_identical(as.integer(as_tidy64(x)), x)
+})
+
+test_that("keeps names", {
+  expect_named(as.integer(set_names(tidy64(1))), "1")
+  expect_named(as_tidy64(set_names(1L)), "1")
 })
 
 test_that("can roundtrip zero", {
@@ -140,6 +150,11 @@ test_that("can roundtrip logicals", {
   expect_identical(as.logical(as_tidy64(x)), x)
 })
 
+test_that("keeps names", {
+  expect_named(as.logical(set_names(tidy64(1))), "1")
+  expect_named(as_tidy64(set_names(TRUE)), "TRUE")
+})
+
 test_that("can convert NA", {
   expect_identical(as.logical(as_tidy64(NA)), NA)
 })
@@ -151,6 +166,13 @@ test_that("as.integer() forces any non-zero value to TRUE", {
 
 # ------------------------------------------------------------------------------
 # as_tidy64(<character>) / as.character()
+
+test_that("keeps names", {
+  expect_named(as.character(set_names(tidy64(1))), "1")
+  expect_named(as_tidy64(set_names("1")), "1")
+
+  expect_named(expect_warning(as_tidy64(set_names("x"))), "x")
+})
 
 test_that("can parse simple case", {
   expect_identical(as_tidy64("1"), as_tidy64(1))
