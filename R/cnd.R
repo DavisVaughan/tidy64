@@ -37,7 +37,23 @@ cnd_body.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
 # ------------------------------------------------------------------------------
 
 stop_to_dbl_from_tidy64_might_lose_precision <- function(x, to, x_arg = "", to_arg = "") {
-  indicator <- tidy64_detect_to_dbl_from_tidy64_might_lose_precision(x)
+  stop_incompatible_cast(
+    x = x,
+    to = to,
+    x_arg = x_arg,
+    to_arg = to_arg,
+    class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision"
+  )
+}
+
+#' @export
+cnd_header.tidy64_error_to_dbl_from_tidy64_might_lose_precision <- function(cnd, ...) {
+  cnd$message
+}
+
+#' @export
+cnd_body.tidy64_error_to_dbl_from_tidy64_might_lose_precision <- function(cnd, ...) {
+  indicator <- tidy64_detect_to_dbl_from_tidy64_might_lose_precision(cnd$x)
   locations <- which(indicator)
 
   locations_string <- make_locations_string(locations)
@@ -47,14 +63,7 @@ stop_to_dbl_from_tidy64_might_lose_precision <- function(x, to, x_arg = "", to_a
   bullet <- glue("Precision may be lost at {locations_string} {locations_collapsed}")
   bullet <- format_error_bullets(c(i = bullet))
 
-  stop_incompatible_cast(
-    x = x,
-    to = to,
-    x_arg = x_arg,
-    to_arg = to_arg,
-    details = bullet,
-    class = "tidy64_error_to_dbl_from_tidy64_might_lose_precision"
-  )
+  bullet
 }
 
 tidy64_detect_to_dbl_from_tidy64_might_lose_precision <- function(x) {
