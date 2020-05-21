@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------------------
 
 // [[ include("cast.h") ]]
-sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
+sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
   const double* p_x = r_dbl_const_deref(x);
 
   r_ssize size = r_length(x);
@@ -28,8 +28,8 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
       continue;
     }
 
-    if (tidy64_dbl_is_outside_tidy64_range(elt)) {
-      Rf_error("TODO: Incompatible type error");
+    if (tidy64_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(elt)) {
+      stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(x, to, x_arg, to_arg);
     }
 
     const int64_t elt_64 = (int64_t) elt;
@@ -52,8 +52,8 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x) {
 }
 
 // [[ include("cast.h") ]]
-sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x) {
-  return tidy64_cast_to_tidy64_from_dbl(x);
+sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
+  return tidy64_cast_to_tidy64_from_dbl(x, to, x_arg, to_arg);
 }
 
 // -----------------------------------------------------------------------------

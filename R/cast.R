@@ -7,11 +7,11 @@ vec_cast.tidy64.tidy64 <- function(x, to, ..., x_arg = "", to_arg = "") {
 
 #' @export
 vec_cast.tidy64.double <- function(x, to, ..., x_arg = "", to_arg = "") {
-  tidy64_cast_to_tidy64_from_dbl(x)
+  tidy64_cast_to_tidy64_from_dbl(x, to, x_arg = x_arg, to_arg = to_arg)
 }
 
-tidy64_cast_to_tidy64_from_dbl <- function(x) {
-  .Call(export_tidy64_cast_to_tidy64_from_dbl, x)
+tidy64_cast_to_tidy64_from_dbl <- function(x, to, ..., x_arg = "", to_arg = "") {
+  .Call(export_tidy64_cast_to_tidy64_from_dbl, x, to, x_arg, to_arg)
 }
 
 # ------------------------------------------------------------------------------

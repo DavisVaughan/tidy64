@@ -36,6 +36,39 @@ cnd_body.tidy64_warning_dbl_is_outside_tidy64_range <- function(cnd, ...) {
 
 # ------------------------------------------------------------------------------
 
+stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range <- function(x, to, x_arg = "", to_arg = "") {
+  stop_incompatible_cast(
+    x = x,
+    to = to,
+    x_arg = x_arg,
+    to_arg = to_arg,
+    class = "tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range"
+  )
+}
+
+#' @export
+cnd_header.tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range <- function(cnd, ...) {
+  cnd$message
+}
+
+#' @export
+cnd_body.tidy64_error_to_tidy64_from_dbl_dbl_is_outside_tidy64_range <- function(cnd, ...) {
+  x <- cnd$x
+  indicator <- x > tidy64_global_max_dbl() | x < tidy64_global_min_dbl()
+  locations <- which(indicator)
+
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
+
+  bullet1 <- "Input is outside the range of a tidy64."
+  bullet2 <- glue("Range was exceeded at {locations_string} {locations_collapsed}")
+
+  format_error_bullets(c(i = bullet1, i = bullet2))
+}
+
+# ------------------------------------------------------------------------------
+
 stop_to_dbl_from_tidy64_might_lose_precision <- function(x, to, x_arg = "", to_arg = "") {
   stop_incompatible_cast(
     x = x,

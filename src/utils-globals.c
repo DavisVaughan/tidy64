@@ -13,6 +13,7 @@ sexp syms_to = NULL;
 sexp syms_x_arg = NULL;
 sexp syms_to_arg = NULL;
 sexp syms_warn_dbl_is_outside_tidy64_range = NULL;
+sexp syms_stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range = NULL;
 sexp syms_stop_to_dbl_from_tidy64_might_lose_precision = NULL;
 
 // -----------------------------------------------------------------------------
@@ -37,6 +38,7 @@ void tidy64_initialize_utils_globals(sexp ns) {
   syms_x_arg = Rf_install("x_arg");
   syms_to_arg = Rf_install("to_arg");
   syms_warn_dbl_is_outside_tidy64_range = Rf_install("warn_dbl_is_outside_tidy64_range");
+  syms_stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range = Rf_install("stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range");
   syms_stop_to_dbl_from_tidy64_might_lose_precision = Rf_install("stop_to_dbl_from_tidy64_might_lose_precision");
 
   names_left_right = r_new_shared_vector(r_type_character, 2);

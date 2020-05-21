@@ -28,6 +28,33 @@ void warn_dbl_is_outside_tidy64_range(sexp x) {
 
 // [[ include("cnd.h") ]]
 __attribute__((noreturn))
+void stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(sexp x, sexp to, sexp x_arg, sexp to_arg) {
+  sexp syms[5] = {
+    syms_x,
+    syms_to,
+    syms_x_arg,
+    syms_to_arg,
+    NULL
+  };
+
+  sexp args[5] = {
+    KEEP(r_protect(x)),
+    KEEP(r_protect(to)),
+    KEEP(r_protect(x_arg)),
+    KEEP(r_protect(to_arg)),
+    NULL
+  };
+
+  sexp call = KEEP(r_call(syms_stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range, syms, args));
+  r_eval(call, tidy64_ns_env);
+
+  never_reached("stop_to_tidy64_from_dbl_dbl_is_outside_tidy64_range");
+}
+
+// -----------------------------------------------------------------------------
+
+// [[ include("cnd.h") ]]
+__attribute__((noreturn))
 void stop_to_dbl_from_tidy64_might_lose_precision(sexp x, sexp to, sexp x_arg, sexp to_arg) {
   sexp syms[5] = {
     syms_x,

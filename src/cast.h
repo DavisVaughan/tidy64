@@ -5,7 +5,7 @@
 
 // -----------------------------------------------------------------------------
 
-sexp tidy64_cast_to_tidy64_from_dbl(sexp x);
+sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg);
 sexp tidy64_cast_to_tidy64_from_int(sexp x);
 sexp tidy64_cast_to_tidy64_from_lgl(sexp x);
 
@@ -15,7 +15,7 @@ sexp tidy64_cast_to_lgl_from_tidy64(sexp x);
 
 // -----------------------------------------------------------------------------
 
-sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x);
+sexp export_tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg);
 sexp export_tidy64_cast_to_tidy64_from_int(sexp x);
 sexp export_tidy64_cast_to_tidy64_from_lgl(sexp x);
 

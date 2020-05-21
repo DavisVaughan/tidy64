@@ -36,7 +36,7 @@
 
 // -----------------------------------------------------------------------------
 
-static inline bool tidy64_dbl_is_outside_tidy64_range(double x) {
+static inline bool tidy64_to_tidy64_from_dbl_dbl_is_outside_tidy64_range(double x) {
   return x < TIDY64_MIN_DBL || x > TIDY64_MAX_DBL;
 }
 
