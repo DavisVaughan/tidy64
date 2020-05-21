@@ -11,7 +11,7 @@
 static inline const struct tidy64 tidy64_unpack(int64_t x) {
   // Map int64_t -> uint64_t
   uint64_t x_u64;
-  if (signbit(x)) {
+  if (x < 0) {
     x_u64 = (uint64_t) (x + 1 + INT64_MAX) - INT64_MIN;
   } else {
     x_u64 = (uint64_t) x;
@@ -55,7 +55,7 @@ static inline int64_t tidy64_pack(double left, double right) {
 
   // Map int32_t -> uint32_t
   uint32_t left_u32;
-  if (signbit(left_32)) {
+  if (left_32 < 0) {
     left_u32 = (uint32_t) (left_32 + 1 + INT32_MAX) - INT32_MIN;
   } else {
     left_u32 = (uint32_t) left_32;
