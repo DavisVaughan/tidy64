@@ -27,6 +27,27 @@ void warn_to_tidy64_from_dbl_oob(sexp x) {
 // -----------------------------------------------------------------------------
 
 // [[ include("cnd.h") ]]
+void warn_to_int_from_tidy64_oob(sexp x) {
+  sexp syms[2] = {
+    syms_x,
+    NULL
+  };
+
+  sexp args[2] = {
+    KEEP(r_protect(x)),
+    NULL
+  };
+
+  sexp call = KEEP(r_call(syms_warn_to_int_from_tidy64_oob, syms, args));
+  r_eval(call, tidy64_ns_env);
+
+  UNPROTECT(2);
+  return;
+}
+
+// -----------------------------------------------------------------------------
+
+// [[ include("cnd.h") ]]
 __attribute__((noreturn))
 void stop_to_tidy64_from_dbl_oob(sexp x, sexp to, sexp x_arg, sexp to_arg) {
   sexp syms[5] = {

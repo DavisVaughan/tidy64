@@ -129,7 +129,7 @@ sexp tidy64_force_to_int_from_tidy64(sexp x) {
   }
 
   if (warn_na) {
-    Rf_warning("TODO: OOB warning. NA returned.");
+    warn_to_int_from_tidy64_oob(x);
   }
 
   FREE(1);

@@ -121,9 +121,13 @@ test_that("can convert NA", {
   expect_identical(as.integer(as_tidy64(NA_integer_)), NA_integer_)
 })
 
-test_that("as.integer() warns and returns integer if outside int range", {
-  x <- as_tidy64(tidy64_global_int_max + 1)
-  expect_identical(expect_warning(as.integer(x)), NA_integer_)
+test_that("as.integer() warns if outside int range", {
+  verify_errors({
+    x1 <- as_tidy64(tidy64_global_int_max + 1)
+    x10 <- rep(x1, 10)
+    expect_identical(expect_warning(as.integer(x1)), NA_integer_)
+    expect_identical(expect_warning(as.integer(x10)), rep(NA_integer_, 10))
+  })
 })
 
 # ------------------------------------------------------------------------------
@@ -245,5 +249,11 @@ test_that("force functions have informative errors", {
     as_tidy64(x1)
     as_tidy64(x2)
     as_tidy64(x10)
+
+    "# as.integer() warns if outside int range"
+    x1 <- as_tidy64(tidy64_global_int_max + 1)
+    x10 <- rep(x1, 10)
+    as.integer(x1)
+    as.integer(x10)
   })
 })

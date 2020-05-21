@@ -36,3 +36,23 @@ i Returning `NA` at the exceeded locations.
 <tidy64[10]>
  [1] NA NA NA NA NA NA NA NA NA NA
 
+
+as.integer() warns if outside int range
+=======================================
+
+> x1 <- as_tidy64(tidy64_global_int_max + 1)
+> x10 <- rep(x1, 10)
+> as.integer(x1)
+Warning: Input is outside the range of an integer.
+i Range was exceeded at location 1.
+i Returning `NA` at the exceeded locations.
+
+[1] NA
+
+> as.integer(x10)
+Warning: Input is outside the range of an integer.
+i Range was exceeded at locations 1, 2, 3, 4, 5, ...
+i Returning `NA` at the exceeded locations.
+
+ [1] NA NA NA NA NA NA NA NA NA NA
+
