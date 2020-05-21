@@ -111,3 +111,30 @@ sexp export_tidy64_detect_to_dbl_from_tidy64_oob_precision(sexp x) {
 }
 
 // -----------------------------------------------------------------------------
+
+// [[ include("cnd.h") ]]
+__attribute__((noreturn))
+void stop_to_tidy64_from_dbl_lossy_fractional(sexp x, sexp to, sexp x_arg, sexp to_arg) {
+  sexp syms[5] = {
+    syms_x,
+    syms_to,
+    syms_x_arg,
+    syms_to_arg,
+    NULL
+  };
+
+  sexp args[5] = {
+    KEEP(r_protect(x)),
+    KEEP(r_protect(to)),
+    KEEP(r_protect(x_arg)),
+    KEEP(r_protect(to_arg)),
+    NULL
+  };
+
+  sexp call = KEEP(r_call(syms_stop_to_tidy64_from_dbl_lossy_fractional, syms, args));
+  r_eval(call, tidy64_ns_env);
+
+  never_reached("stop_to_tidy64_from_dbl_lossy_fractional");
+}
+
+// -----------------------------------------------------------------------------

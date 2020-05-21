@@ -36,7 +36,7 @@ sexp tidy64_cast_to_tidy64_from_dbl(sexp x, sexp to, sexp x_arg, sexp to_arg) {
 
     // Catch fractional doubles!
     if (elt != elt_64) {
-      Rf_error("TODO: Incompatible type error");
+      stop_to_tidy64_from_dbl_lossy_fractional(x, to, x_arg, to_arg);
     }
 
     const struct tidy64 unpacked = tidy64_unpack(elt_64);

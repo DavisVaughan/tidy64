@@ -16,6 +16,7 @@ extern sexp syms_to_arg;
 extern sexp syms_warn_to_tidy64_from_dbl_oob;
 extern sexp syms_stop_to_tidy64_from_dbl_oob;
 extern sexp syms_stop_to_dbl_from_tidy64_oob_precision;
+extern sexp syms_stop_to_tidy64_from_dbl_lossy_fractional;
 
 // -----------------------------------------------------------------------------
 

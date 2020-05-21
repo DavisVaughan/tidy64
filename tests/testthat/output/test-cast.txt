@@ -37,3 +37,21 @@ Error: Can't convert `x` <double> to match type of `to` <tidy64>.
 i Input is outside the range of a tidy64.
 i Range was exceeded at location 1.
 
+
+casting to tidy64 from double is an error if fractional
+=======================================================
+
+> x1 <- 1.5
+> x10 <- rep(x1, 10)
+> vec_cast(x1, new_tidy64())
+Error: Can't convert <double> to <tidy64>.
+i Lossy conversion from fractional value at location 1.
+
+> vec_cast(x10, new_tidy64())
+Error: Can't convert <double> to <tidy64>.
+i Lossy conversion from fractional value at locations 1, 2, 3, 4, 5, ...
+
+> vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to")
+Error: Can't convert `x` <double> to match type of `to` <tidy64>.
+i Lossy conversion from fractional value at location 1.
+

@@ -39,6 +39,16 @@ test_that("casting to tidy64 from double is an error if OOB", {
   })
 })
 
+test_that("casting to tidy64 from double is an error if fractional", {
+  verify_errors({
+    x1 <- 1.5
+    x10 <- rep(x1, 10)
+    expect_error(vec_cast(x1, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_lossy_fractional")
+    expect_error(vec_cast(x10, new_tidy64()), class = "tidy64_error_to_tidy64_from_dbl_lossy_fractional")
+    expect_error(vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_tidy64_from_dbl_lossy_fractional")
+  })
+})
+
 # ------------------------------------------------------------------------------
 
 test_that("cast methods have informative errors", {
@@ -52,6 +62,13 @@ test_that("cast methods have informative errors", {
 
     "# casting to tidy64 from double is an error if OOB"
     x1 <- .Machine$double.xmax
+    x10 <- rep(x1, 10)
+    vec_cast(x1, new_tidy64())
+    vec_cast(x10, new_tidy64())
+    vec_cast(x1, new_tidy64(), x_arg = "x", to_arg = "to")
+
+    "# casting to tidy64 from double is an error if fractional"
+    x1 <- 1.5
     x10 <- rep(x1, 10)
     vec_cast(x1, new_tidy64())
     vec_cast(x10, new_tidy64())

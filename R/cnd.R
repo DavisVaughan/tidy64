@@ -105,6 +105,42 @@ tidy64_detect_to_dbl_from_tidy64_oob_precision <- function(x) {
 
 # ------------------------------------------------------------------------------
 
+stop_to_tidy64_from_dbl_lossy_fractional <- function(x, to, x_arg = "", to_arg = "") {
+  stop_incompatible_cast(
+    x = x,
+    to = to,
+    x_arg = x_arg,
+    to_arg = to_arg,
+    class = "tidy64_error_to_tidy64_from_dbl_lossy_fractional"
+  )
+}
+
+#' @export
+cnd_header.tidy64_error_to_tidy64_from_dbl_lossy_fractional <- function(cnd, ...) {
+  cnd$message
+}
+
+#' @export
+cnd_body.tidy64_error_to_tidy64_from_dbl_lossy_fractional <- function(cnd, ...) {
+  indicator <- tidy64_detect_to_tidy64_from_dbl_lossy_fractional(cnd$x)
+  locations <- which(indicator)
+
+  locations_string <- make_locations_string(locations)
+  locations_collapsed <- collapse_locations(locations)
+  locations_collapsed <- ensure_full_stop(locations_collapsed)
+
+  bullet <- glue("Lossy conversion from fractional value at {locations_string} {locations_collapsed}")
+  bullet <- format_error_bullets(c(i = bullet))
+
+  bullet
+}
+
+tidy64_detect_to_tidy64_from_dbl_lossy_fractional <- function(x) {
+  (floor(x) != x) & !is.na(x)
+}
+
+# ------------------------------------------------------------------------------
+
 make_locations_string <- function(locations) {
   if (length(locations) == 1L) {
     "location"

@@ -15,6 +15,7 @@ sexp syms_to_arg = NULL;
 sexp syms_warn_to_tidy64_from_dbl_oob = NULL;
 sexp syms_stop_to_tidy64_from_dbl_oob = NULL;
 sexp syms_stop_to_dbl_from_tidy64_oob_precision = NULL;
+sexp syms_stop_to_tidy64_from_dbl_lossy_fractional = NULL;
 
 // -----------------------------------------------------------------------------
 
@@ -40,6 +41,7 @@ void tidy64_initialize_utils_globals(sexp ns) {
   syms_warn_to_tidy64_from_dbl_oob = Rf_install("warn_to_tidy64_from_dbl_oob");
   syms_stop_to_tidy64_from_dbl_oob = Rf_install("stop_to_tidy64_from_dbl_oob");
   syms_stop_to_dbl_from_tidy64_oob_precision = Rf_install("stop_to_dbl_from_tidy64_oob_precision");
+  syms_stop_to_tidy64_from_dbl_lossy_fractional = Rf_install("stop_to_tidy64_from_dbl_lossy_fractional");
 
   names_left_right = r_new_shared_vector(r_type_character, 2);
   r_chr_set(names_left_right, 0, r_new_string("left"));
