@@ -64,10 +64,6 @@ static const R_CallMethodDef CallEntries[] = {
   // math.h
   {"export_tidy64_log10",                      (DL_FUNC) &export_tidy64_log10, 1},
 
-  // pack.h
-  {"export_tidy64_pack",                       (DL_FUNC) &export_tidy64_pack, 1},
-  {"export_tidy64_unpack",                     (DL_FUNC) &export_tidy64_unpack, 1},
-
   {NULL, NULL, 0}
 };
 

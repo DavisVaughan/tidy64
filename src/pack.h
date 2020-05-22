@@ -81,9 +81,4 @@ static inline int64_t tidy64_pack(double left, double right) {
 
 // -----------------------------------------------------------------------------
 
-sexp export_tidy64_pack(sexp x);
-sexp export_tidy64_unpack(sexp x);
-
-// -----------------------------------------------------------------------------
-
 #endif
