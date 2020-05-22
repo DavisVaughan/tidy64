@@ -29,10 +29,7 @@ sexp tidy64_log10(sexp x) {
     // which would be a no-op on platforms with long double support. Otherwise
     // could warn on Windows if OOB.
 
-    // TODO: Cast to `long double` then cast result to `double`? Would have
-    // better precision on Mac / Linux, but Windows probably maps long double
-    // to double.
-    const double elt_out = log10((double) elt);
+    const double elt_out = (double) log10l((long double) elt);
 
     if (isnan(elt_out)) {
       p_out[i] = r_dbl_nan;
