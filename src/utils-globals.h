@@ -1,5 +1,5 @@
-#ifndef TIDY64_GLOBALS_H
-#define TIDY64_GLOBALS_H
+#ifndef TIDY64_UTILS_GLOBALS_H
+#define TIDY64_UTILS_GLOBALS_H
 
 #include "r.h"
 
