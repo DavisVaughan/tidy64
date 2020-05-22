@@ -1,11 +1,23 @@
 #' vctrs compatibility functions
 #'
-#' @name tidy64-vctrs
+#' These functions are the extensions that allow stepper objects to
+#' work with vctrs.
+#'
+#' @param x,y Objects.
+#' @param op An arithmetic operator as a string.
+#' @param ... Used to pass along error message information.
+#'
+#' @return
+#'
+#' See the corresponding vctrs function for the exact return value.
+#'
+#' @name tidy64-vctrs-compat
+#'
 NULL
 
 # ------------------------------------------------------------------------------
 
-#' @rdname tidy64-vctrs
+#' @rdname tidy64-vctrs-compat
 #' @export vec_arith.tidy64
 #' @method vec_arith tidy64
 #' @export
