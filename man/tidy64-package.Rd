@@ -4,7 +4,7 @@
 \name{tidy64-package}
 \alias{tidy64}
 \alias{tidy64-package}
-\title{tidy64: What the Package Does (One Line, Title Case)}
+\title{tidy64: An S3 Class Supporting 64-bit Integers}
 \description{
 What the package does (one paragraph).
 }
