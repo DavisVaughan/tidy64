@@ -1,4 +1,19 @@
 # ------------------------------------------------------------------------------
+# tidy64()
+
+test_that("can create empty tidy64", {
+  expect_length(tidy64(), 0)
+})
+
+test_that("names carry through", {
+  expect_named(tidy64(c(x = 1)), "x")
+})
+
+test_that("conversion must be lossless", {
+  expect_error(tidy64(1.5), class = "tidy64_error_to_tidy64_from_dbl_lossy_fractional")
+})
+
+# ------------------------------------------------------------------------------
 # new_tidy64()
 
 test_that("can construct tidy64 from bare bones", {

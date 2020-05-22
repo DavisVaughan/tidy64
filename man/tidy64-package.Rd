@@ -2,8 +2,8 @@
 % Please edit documentation in R/tidy64-package.R
 \docType{package}
 \name{tidy64-package}
-\alias{tidy64}
 \alias{tidy64-package}
+\alias{_PACKAGE}
 \title{tidy64: An S3 Class Supporting 64-bit Integers}
 \description{
 What the package does (one paragraph).
