@@ -16,6 +16,15 @@ sexp tidy64_new(sexp left, sexp right) {
 
 // -----------------------------------------------------------------------------
 
+const struct tidy64 tidy64_new_na() {
+  return (struct tidy64) {
+    .left = r_dbl_na,
+    .right = r_dbl_na
+  };
+}
+
+// -----------------------------------------------------------------------------
+
 // [[ include("tidy64.h") ]]
 sexp tidy64_peek_names(sexp x) {
   return r_peek_attribute(x, syms_tidy64_names);

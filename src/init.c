@@ -7,6 +7,12 @@
 #include "exports.h"
 
 static const R_CallMethodDef CallEntries[] = {
+  // arithmetic.h
+  {"export_tidy64_plus_tidy64_tidy64",        (DL_FUNC) &export_tidy64_plus_tidy64_tidy64, 3},
+  {"export_tidy64_plus_tidy64_integer",       (DL_FUNC) &export_tidy64_plus_tidy64_integer, 3},
+  {"export_tidy64_plus_tidy64_logical",       (DL_FUNC) &export_tidy64_plus_tidy64_logical, 3},
+  {"export_tidy64_plus_tidy64_double",        (DL_FUNC) &export_tidy64_plus_tidy64_double, 3},
+
   // cast.h
   {"export_tidy64_cast_to_tidy64_from_dbl",   (DL_FUNC) &export_tidy64_cast_to_tidy64_from_dbl, 4},
   {"export_tidy64_cast_to_tidy64_from_int",   (DL_FUNC) &export_tidy64_cast_to_tidy64_from_int, 1},

@@ -103,6 +103,8 @@ static inline r_ssize tidy64_size(sexp x) {
 
 sexp tidy64_new(sexp left, sexp right);
 
+const struct tidy64 tidy64_new_na();
+
 // -----------------------------------------------------------------------------
 
 sexp tidy64_peek_names(sexp x);
