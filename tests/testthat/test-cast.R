@@ -7,6 +7,13 @@ test_that("default cast method kicks in", {
 })
 
 # ------------------------------------------------------------------------------
+# tidy64 <-> tidy64
+
+test_that("can cast to self", {
+  expect_identical(vec_cast(tidy64(1), tidy64(2)), tidy64(1))
+})
+
+# ------------------------------------------------------------------------------
 # tidy64 <-> double
 
 test_that("can cast both ways", {
@@ -80,6 +87,42 @@ test_that("casting to integer is an error if it is oob", {
     expect_error(vec_cast(x10, integer()), class = "tidy64_error_to_int_from_tidy64_oob")
     expect_error(vec_cast(x1, integer(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_int_from_tidy64_oob")
   })
+})
+
+# ------------------------------------------------------------------------------
+# tidy64 <-> logical
+
+test_that("can cast both ways", {
+  expect_identical(vec_cast(tidy64(1), logical()), TRUE)
+  expect_identical(vec_cast(tidy64(0), logical()), FALSE)
+  expect_identical(vec_cast(TRUE, new_tidy64()), tidy64(1))
+  expect_identical(vec_cast(FALSE, new_tidy64()), tidy64(0))
+})
+
+test_that("can cast NA both ways", {
+  expect_identical(vec_cast(tidy64(NA), logical()), NA)
+  expect_identical(vec_cast(NA, new_tidy64()), tidy64(NA))
+})
+
+test_that("keeps names", {
+  expect_named(vec_cast(set_names(tidy64(1)), logical()), "1")
+  expect_named(vec_cast(set_names(TRUE), tidy64()), "TRUE")
+})
+
+# TODO: Need better error message
+test_that("casting to logical is an error if it is not 1 or 0", {
+  # verify_errors({
+  #   x1 <- as_tidy64(2)
+  #   x10 <- rep(x1, 10)
+  #   expect_error(vec_cast(x1, logical()), class = "tidy64_error_to_int_from_tidy64_oob")
+  #   expect_error(vec_cast(x10, logical()), class = "tidy64_error_to_int_from_tidy64_oob")
+  #   expect_error(vec_cast(x1, logical(), x_arg = "x", to_arg = "to"), class = "tidy64_error_to_int_from_tidy64_oob")
+  # })
+
+  x1 <- as_tidy64(2)
+  x2 <- as_tidy64(-2)
+  expect_error(vec_cast(x1, logical()))
+  expect_error(vec_cast(x2, logical()))
 })
 
 # ------------------------------------------------------------------------------
