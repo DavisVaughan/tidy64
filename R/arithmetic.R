@@ -41,6 +41,7 @@ vec_arith.tidy64.tidy64 <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_tidy64_tidy64(x, y, size),
     "-" = tidy64_minus_tidy64_tidy64(x, y, size),
+    "*" = tidy64_multiply_tidy64_tidy64(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -51,6 +52,10 @@ tidy64_plus_tidy64_tidy64 <- function(x, y, size) {
 
 tidy64_minus_tidy64_tidy64 <- function(x, y, size) {
   .Call(export_tidy64_minus_tidy64_tidy64, x, y, size)
+}
+
+tidy64_multiply_tidy64_tidy64 <- function(x, y, size) {
+  .Call(export_tidy64_multiply_tidy64_tidy64, x, y, size)
 }
 
 # ------------------------------------------------------------------------------
@@ -83,6 +88,7 @@ vec_arith_tidy64_integer <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_tidy64_integer(x, y, size),
     "-" = tidy64_minus_tidy64_integer(x, y, size),
+    "*" = tidy64_multiply_tidy64_integer(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -95,6 +101,10 @@ tidy64_minus_tidy64_integer <- function(x, y, size) {
   .Call(export_tidy64_minus_tidy64_integer, x, y, size)
 }
 
+tidy64_multiply_tidy64_integer <- function(x, y, size) {
+  .Call(export_tidy64_multiply_tidy64_integer, x, y, size)
+}
+
 
 vec_arith_integer_tidy64 <- function(op, x, y, ...) {
   size <- vec_size_common(x = x, y = y)
@@ -102,6 +112,7 @@ vec_arith_integer_tidy64 <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_integer_tidy64(x, y, size),
     "-" = tidy64_minus_integer_tidy64(x, y, size),
+    "*" = tidy64_multiply_integer_tidy64(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -114,6 +125,10 @@ tidy64_minus_integer_tidy64 <- function(x, y, size) {
   .Call(export_tidy64_minus_integer_tidy64, x, y, size)
 }
 
+tidy64_multiply_integer_tidy64 <- function(x, y, size) {
+  .Call(export_tidy64_multiply_integer_tidy64, x, y, size)
+}
+
 # ------------------------------------------------------------------------------
 
 vec_arith_tidy64_double <- function(op, x, y, ...) {
@@ -122,6 +137,7 @@ vec_arith_tidy64_double <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_tidy64_double(x, y, size),
     "-" = tidy64_minus_tidy64_double(x, y, size),
+    "*" = tidy64_multiply_tidy64_double(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -134,6 +150,9 @@ tidy64_minus_tidy64_double <- function(x, y, size) {
   .Call(export_tidy64_minus_tidy64_double, x, y, size)
 }
 
+tidy64_multiply_tidy64_double <- function(x, y, size) {
+  .Call(export_tidy64_multiply_tidy64_double, x, y, size)
+}
 
 vec_arith_double_tidy64 <- function(op, x, y, ...) {
   size <- vec_size_common(x = x, y = y)
@@ -141,6 +160,7 @@ vec_arith_double_tidy64 <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_double_tidy64(x, y, size),
     "-" = tidy64_minus_double_tidy64(x, y, size),
+    "*" = tidy64_multiply_double_tidy64(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -153,6 +173,10 @@ tidy64_minus_double_tidy64 <- function(x, y, size) {
   .Call(export_tidy64_minus_double_tidy64, x, y, size)
 }
 
+tidy64_multiply_double_tidy64 <- function(x, y, size) {
+  .Call(export_tidy64_multiply_double_tidy64, x, y, size)
+}
+
 # ------------------------------------------------------------------------------
 
 #' @method vec_arith.tidy64 logical
@@ -163,6 +187,7 @@ vec_arith.tidy64.logical <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_tidy64_logical(x, y, size),
     "-" = tidy64_minus_tidy64_logical(x, y, size),
+    "*" = tidy64_multiply_tidy64_logical(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -175,6 +200,10 @@ tidy64_minus_tidy64_logical <- function(x, y, size) {
   .Call(export_tidy64_minus_tidy64_logical, x, y, size)
 }
 
+tidy64_multiply_tidy64_logical <- function(x, y, size) {
+  .Call(export_tidy64_multiply_tidy64_logical, x, y, size)
+}
+
 #' @method vec_arith.logical tidy64
 #' @export
 vec_arith.logical.tidy64 <- function(op, x, y, ...) {
@@ -183,6 +212,7 @@ vec_arith.logical.tidy64 <- function(op, x, y, ...) {
   switch (op,
     "+" = tidy64_plus_logical_tidy64(x, y, size),
     "-" = tidy64_minus_logical_tidy64(x, y, size),
+    "*" = tidy64_multiply_logical_tidy64(x, y, size),
     stop_incompatible_op(op, x, y)
   )
 }
@@ -193,4 +223,8 @@ tidy64_plus_logical_tidy64 <- function(x, y, size) {
 
 tidy64_minus_logical_tidy64 <- function(x, y, size) {
   .Call(export_tidy64_minus_logical_tidy64, x, y, size)
+}
+
+tidy64_multiply_logical_tidy64 <- function(x, y, size) {
+  .Call(export_tidy64_multiply_logical_tidy64, x, y, size)
 }

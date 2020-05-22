@@ -15,6 +15,42 @@ static inline bool tidy64_minus_int64_int64_is_oob(int64_t x, int64_t y) {
          ((y > 0) && (x < (TIDY64_MIN + y)));
 }
 
+// Original inspiration:
+// https://codereview.stackexchange.com/questions/98791/safe-multiplication-of-two-64-bit-signed-integers
+// Simplified equivalent that this is based on:
+// https://github.com/JoshuaWise/integer/blob/b8484943180212a6d17d5ad69c336b787354b68e/src/integer.cpp#L146-L152
+
+// Proof:
+// - Rearrangements are done to avoid possible division by 0.
+// - The case where both inputs are either negative or zero requires an
+//   additional non-zero check.
+// - Note that when we divide by a negative in the rearrangement step of the
+//   case where both inputs are negative or zero, we must flip the comparison
+//   sign.
+//
+// Signs             |  Overflows if  |  Rearranged
+// ----------------------------------------------
+// [x  > 0, y  > 0]  |  x * y > MAX   |  x > MAX / y
+// [x  > 0, y <= 0]  |  x * y < MIN   |  y < MIN / x
+// [x <= 0, y  > 0]  |  x * y < MIN   |  x < MIN / y
+// [x <= 0, y <= 0]  |  x * y > MAX   |  x != 0 && y < MAX / x
+
+static inline bool tidy64_multiply_int64_int64_is_oob(int64_t x, int64_t y) {
+  if (x > 0) {
+    if (y > 0) {
+      return x > TIDY64_MAX / y;
+    } else {
+      return y < TIDY64_MIN / x;
+    }
+  } else {
+    if (y > 0) {
+      return x < TIDY64_MIN / y;
+    } else {
+      return x != 0 && y < TIDY64_MAX / x;
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 
 static inline const struct tidy64 tidy64_plus_int64_int64_one(int64_t x,
@@ -41,12 +77,28 @@ static inline const struct tidy64 tidy64_minus_int64_int64_one(int64_t x,
   return tidy64_unpack(out_elt);
 }
 
+static inline const struct tidy64 tidy64_multiply_int64_int64_one(int64_t x,
+                                                                  int64_t y,
+                                                                  bool* p_warn) {
+  if (tidy64_multiply_int64_int64_is_oob(x, y)) {
+    *p_warn = true;
+    return tidy64_new_na();
+  }
+
+  const int64_t out_elt = x * y;
+  return tidy64_unpack(out_elt);
+}
+
 static inline double tidy64_plus_ld_ld_one(long double x, long double y) {
   return (double) (x + y);
 }
 
 static inline double tidy64_minus_ld_ld_one(long double x, long double y) {
   return (double) (x - y);
+}
+
+static inline double tidy64_multiply_ld_ld_one(long double x, long double y) {
+  return (double) (x * y);
 }
 
 // -----------------------------------------------------------------------------
@@ -105,6 +157,9 @@ static sexp tidy64_plus_tidy64_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssi
 }
 static sexp tidy64_minus_tidy64_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_TIDY64_TIDY64_IMPL(tidy64_minus_int64_int64_one);
+}
+static sexp tidy64_multiply_tidy64_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_TIDY64_TIDY64_IMPL(tidy64_multiply_int64_int64_one);
 }
 
 #undef TIDY64_OP_TIDY64_TIDY64_IMPL
@@ -165,11 +220,17 @@ static sexp tidy64_plus_tidy64_integer_impl(sexp x, sexp y, r_ssize x_size, r_ss
 static sexp tidy64_minus_tidy64_integer_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR_IMPL(tidy64_minus_int64_int64_one, int, r_int_const_deref, r_int_missing);
 }
+static sexp tidy64_multiply_tidy64_integer_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR_IMPL(tidy64_multiply_int64_int64_one, int, r_int_const_deref, r_int_missing);
+}
 static sexp tidy64_plus_tidy64_logical_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR_IMPL(tidy64_plus_int64_int64_one, int, r_lgl_const_deref, r_lgl_missing);
 }
 static sexp tidy64_minus_tidy64_logical_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR_IMPL(tidy64_minus_int64_int64_one, int, r_int_const_deref, r_int_missing);
+}
+static sexp tidy64_multiply_tidy64_logical_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR_IMPL(tidy64_multiply_int64_int64_one, int, r_int_const_deref, r_int_missing);
 }
 
 #undef TIDY64_OP_TIDY64_VECTOR_IMPL
@@ -231,11 +292,17 @@ static sexp tidy64_plus_integer_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ss
 static sexp tidy64_minus_integer_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64_IMPL(tidy64_minus_int64_int64_one, int, r_int_const_deref, r_int_missing);
 }
+static sexp tidy64_multiply_integer_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64_IMPL(tidy64_multiply_int64_int64_one, int, r_int_const_deref, r_int_missing);
+}
 static sexp tidy64_plus_logical_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64_IMPL(tidy64_plus_int64_int64_one, int, r_lgl_const_deref, r_lgl_missing);
 }
 static sexp tidy64_minus_logical_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64_IMPL(tidy64_minus_int64_int64_one, int, r_int_const_deref, r_int_missing);
+}
+static sexp tidy64_multiply_logical_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64_IMPL(tidy64_multiply_int64_int64_one, int, r_int_const_deref, r_int_missing);
 }
 
 #undef TIDY64_OP_VECTOR_TIDY64_IMPL
@@ -289,6 +356,9 @@ static sexp tidy64_plus_tidy64_double_impl(sexp x, sexp y, r_ssize x_size, r_ssi
 static sexp tidy64_minus_tidy64_double_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_TIDY64_DOUBLE_IMPL(tidy64_minus_ld_ld_one);
 }
+static sexp tidy64_multiply_tidy64_double_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_TIDY64_DOUBLE_IMPL(tidy64_multiply_ld_ld_one);
+}
 
 #undef TIDY64_OP_TIDY64_DOUBLE_IMPL
 
@@ -341,6 +411,9 @@ static sexp tidy64_plus_double_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssi
 static sexp tidy64_minus_double_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   TIDY64_OP_DOUBLE_TIDY64_IMPL(tidy64_minus_ld_ld_one);
 }
+static sexp tidy64_multiply_double_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_OP_DOUBLE_TIDY64_IMPL(tidy64_multiply_ld_ld_one);
+}
 
 #undef TIDY64_OP_DOUBLE_TIDY64_IMPL
 
@@ -365,6 +438,9 @@ static sexp tidy64_plus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
 static sexp tidy64_minus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_TIDY64(tidy64_minus_tidy64_tidy64_impl, tidy64_poke_names);
 }
+static sexp tidy64_multiply_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_TIDY64(tidy64_multiply_tidy64_tidy64_impl, tidy64_poke_names);
+}
 
 #undef TIDY64_OP_TIDY64_TIDY64
 
@@ -388,17 +464,26 @@ static sexp tidy64_plus_tidy64_integer(sexp x, sexp y, r_ssize size) {
 static sexp tidy64_minus_tidy64_integer(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR(tidy64_minus_tidy64_integer_impl, tidy64_poke_names);
 }
+static sexp tidy64_multiply_tidy64_integer(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_multiply_tidy64_integer_impl, tidy64_poke_names);
+}
 static sexp tidy64_plus_tidy64_logical(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR(tidy64_plus_tidy64_logical_impl, tidy64_poke_names);
 }
 static sexp tidy64_minus_tidy64_logical(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR(tidy64_minus_tidy64_logical_impl, tidy64_poke_names);
 }
+static sexp tidy64_multiply_tidy64_logical(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_multiply_tidy64_logical_impl, tidy64_poke_names);
+}
 static sexp tidy64_plus_tidy64_double(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR(tidy64_plus_tidy64_double_impl, r_poke_names);
 }
 static sexp tidy64_minus_tidy64_double(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_TIDY64_VECTOR(tidy64_minus_tidy64_double_impl, r_poke_names);
+}
+static sexp tidy64_multiply_tidy64_double(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_multiply_tidy64_double_impl, r_poke_names);
 }
 
 #undef TIDY64_OP_TIDY64_VECTOR
@@ -423,17 +508,26 @@ static sexp tidy64_plus_integer_tidy64(sexp x, sexp y, r_ssize size) {
 static sexp tidy64_minus_integer_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64(tidy64_minus_integer_tidy64_impl, tidy64_poke_names);
 }
+static sexp tidy64_multiply_integer_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_multiply_integer_tidy64_impl, tidy64_poke_names);
+}
 static sexp tidy64_plus_logical_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64(tidy64_plus_logical_tidy64_impl, tidy64_poke_names);
 }
 static sexp tidy64_minus_logical_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64(tidy64_minus_logical_tidy64_impl, tidy64_poke_names);
 }
+static sexp tidy64_multiply_logical_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_multiply_logical_tidy64_impl, tidy64_poke_names);
+}
 static sexp tidy64_plus_double_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64(tidy64_plus_double_tidy64_impl, r_poke_names);
 }
 static sexp tidy64_minus_double_tidy64(sexp x, sexp y, r_ssize size) {
   TIDY64_OP_VECTOR_TIDY64(tidy64_minus_double_tidy64_impl, r_poke_names);
+}
+static sexp tidy64_multiply_double_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_multiply_double_tidy64_impl, r_poke_names);
 }
 
 #undef TIDY64_OP_VECTOR_TIDY64
@@ -452,6 +546,12 @@ sexp export_tidy64_minus_tidy64_tidy64(sexp x, sexp y, sexp size) {
   return tidy64_minus_tidy64_tidy64(x, y, c_size);
 }
 
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_tidy64_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_tidy64_tidy64(x, y, c_size);
+}
+
 
 // [[ include("arithmetic.h") ]]
 sexp export_tidy64_plus_tidy64_integer(sexp x, sexp y, sexp size) {
@@ -466,6 +566,12 @@ sexp export_tidy64_minus_tidy64_integer(sexp x, sexp y, sexp size) {
 }
 
 // [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_tidy64_integer(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_tidy64_integer(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
 sexp export_tidy64_plus_integer_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_plus_integer_tidy64(x, y, c_size);
@@ -475,6 +581,12 @@ sexp export_tidy64_plus_integer_tidy64(sexp x, sexp y, sexp size) {
 sexp export_tidy64_minus_integer_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_minus_integer_tidy64(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_integer_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_integer_tidy64(x, y, c_size);
 }
 
 
@@ -491,6 +603,12 @@ sexp export_tidy64_minus_tidy64_logical(sexp x, sexp y, sexp size) {
 }
 
 // [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_tidy64_logical(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_tidy64_logical(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
 sexp export_tidy64_plus_logical_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_plus_logical_tidy64(x, y, c_size);
@@ -500,6 +618,12 @@ sexp export_tidy64_plus_logical_tidy64(sexp x, sexp y, sexp size) {
 sexp export_tidy64_minus_logical_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_minus_logical_tidy64(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_logical_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_logical_tidy64(x, y, c_size);
 }
 
 
@@ -516,6 +640,12 @@ sexp export_tidy64_minus_tidy64_double(sexp x, sexp y, sexp size) {
 }
 
 // [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_tidy64_double(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_tidy64_double(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
 sexp export_tidy64_plus_double_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_plus_double_tidy64(x, y, c_size);
@@ -525,4 +655,10 @@ sexp export_tidy64_plus_double_tidy64(sexp x, sexp y, sexp size) {
 sexp export_tidy64_minus_double_tidy64(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_minus_double_tidy64(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_multiply_double_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_multiply_double_tidy64(x, y, c_size);
 }
