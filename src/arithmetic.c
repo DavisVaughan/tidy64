@@ -27,7 +27,7 @@ static inline const struct tidy64 tidy64_plus_int64_int64_one(int64_t x,
 
 // -----------------------------------------------------------------------------
 
-static sexp tidy64_plus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
+static sexp tidy64_plus_tidy64_tidy64_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   const double* p_x_left = tidy64_get_left_const_deref(x);
   const double* p_x_right = tidy64_get_right_const_deref(x);
 
@@ -40,8 +40,8 @@ static sexp tidy64_plus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
   double* p_left = tidy64_deref_left(left);
   double* p_right = tidy64_deref_right(right);
 
-  const bool x_recycle = tidy64_size(x) == 1;
-  const bool y_recycle = tidy64_size(y) == 1;
+  const bool x_recycle = x_size == 1;
+  const bool y_recycle = y_size == 1;
 
   bool warn_oob = false;
 
@@ -80,16 +80,10 @@ static sexp tidy64_plus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
   return out;
 }
 
-// [[ include("arithmetic.h") ]]
-sexp export_tidy64_plus_tidy64_tidy64(sexp x, sexp y, sexp size) {
-  const r_ssize c_size = r_int_const_deref(size)[0];
-  return tidy64_plus_tidy64_tidy64(x, y, c_size);
-}
-
 // -----------------------------------------------------------------------------
 
 // For integer and logical
-#define TIDY64_PLUS_TIDY64_VECTOR(CTYPE, CONST_DEREF, MISSING) {               \
+#define TIDY64_PLUS_TIDY64_VECTOR_IMPL(CTYPE, CONST_DEREF, MISSING) {          \
   const double* p_x_left = tidy64_get_left_const_deref(x);                     \
   const double* p_x_right = tidy64_get_right_const_deref(x);                   \
                                                                                \
@@ -101,8 +95,8 @@ sexp export_tidy64_plus_tidy64_tidy64(sexp x, sexp y, sexp size) {
   double* p_left = tidy64_deref_left(left);                                    \
   double* p_right = tidy64_deref_right(right);                                 \
                                                                                \
-  const bool x_recycle = tidy64_size(x) == 1;                                  \
-  const bool y_recycle = r_length(y) == 1;                                     \
+  const bool x_recycle = x_size == 1;                                          \
+  const bool y_recycle = y_size == 1;                                          \
                                                                                \
   bool warn_oob = false;                                                       \
                                                                                \
@@ -140,31 +134,18 @@ sexp export_tidy64_plus_tidy64_tidy64(sexp x, sexp y, sexp size) {
   return out;                                                                  \
 }
 
-static sexp tidy64_plus_tidy64_integer(sexp x, sexp y, r_ssize size) {
-  TIDY64_PLUS_TIDY64_VECTOR(int, r_int_const_deref, r_int_missing);
+static sexp tidy64_plus_tidy64_integer_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_PLUS_TIDY64_VECTOR_IMPL(int, r_int_const_deref, r_int_missing);
+}
+static sexp tidy64_plus_tidy64_logical_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
+  TIDY64_PLUS_TIDY64_VECTOR_IMPL(int, r_lgl_const_deref, r_lgl_missing);
 }
 
-static sexp tidy64_plus_tidy64_logical(sexp x, sexp y, r_ssize size) {
-  TIDY64_PLUS_TIDY64_VECTOR(int, r_lgl_const_deref, r_lgl_missing);
-}
-
-#undef TIDY64_PLUS_TIDY64_VECTOR
-
-// [[ include("arithmetic.h") ]]
-sexp export_tidy64_plus_tidy64_integer(sexp x, sexp y, sexp size) {
-  const r_ssize c_size = r_int_const_deref(size)[0];
-  return tidy64_plus_tidy64_integer(x, y, c_size);
-}
-
-// [[ include("arithmetic.h") ]]
-sexp export_tidy64_plus_tidy64_logical(sexp x, sexp y, sexp size) {
-  const r_ssize c_size = r_int_const_deref(size)[0];
-  return tidy64_plus_tidy64_logical(x, y, c_size);
-}
+#undef TIDY64_PLUS_TIDY64_VECTOR_IMPL
 
 // -----------------------------------------------------------------------------
 
-static sexp tidy64_plus_tidy64_double(sexp x, sexp y, r_ssize size) {
+static sexp tidy64_plus_tidy64_double_impl(sexp x, sexp y, r_ssize x_size, r_ssize y_size, r_ssize size) {
   const double* p_x_left = tidy64_get_left_const_deref(x);
   const double* p_x_right = tidy64_get_right_const_deref(x);
 
@@ -173,8 +154,8 @@ static sexp tidy64_plus_tidy64_double(sexp x, sexp y, r_ssize size) {
   sexp out = KEEP(r_new_dbl(size));
   double* p_out = r_dbl_deref(out);
 
-  const bool x_recycle = tidy64_size(x) == 1;
-  const bool y_recycle = r_length(y) == 1;
+  const bool x_recycle = x_size == 1;
+  const bool y_recycle = y_size == 1;
 
   for (r_ssize i = 0; i < size; ++i) {
     const double x_elt_left = x_recycle ? p_x_left[0] : p_x_left[i];
@@ -208,8 +189,119 @@ static sexp tidy64_plus_tidy64_double(sexp x, sexp y, r_ssize size) {
   return out;
 }
 
+// -----------------------------------------------------------------------------
+
+#define TIDY64_OP_TIDY64_TIDY64(IMPL, POKE_NAMES) {                \
+  const r_ssize x_size = tidy64_size(x);                           \
+  const r_ssize y_size = tidy64_size(y);                           \
+                                                                   \
+  sexp out = KEEP(IMPL(x, y, x_size, y_size, size));               \
+                                                                   \
+  sexp names = r_common_names(x, y, x_size, y_size);               \
+  POKE_NAMES(out, names);                                          \
+                                                                   \
+  FREE(1);                                                         \
+  return out;                                                      \
+}
+
+static sexp tidy64_plus_tidy64_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_TIDY64(tidy64_plus_tidy64_tidy64_impl, tidy64_poke_names);
+}
+
+#undef TIDY64_OP_TIDY64_TIDY64
+
+
+#define TIDY64_OP_TIDY64_VECTOR(IMPL, POKE_NAMES) {              \
+  const r_ssize x_size = tidy64_size(x);                         \
+  const r_ssize y_size = r_length(y);                            \
+                                                                 \
+  sexp out = KEEP(IMPL(x, y, x_size, y_size, size));             \
+                                                                 \
+  sexp names = r_common_names(x, y, x_size, y_size);             \
+  POKE_NAMES(out, names);                                        \
+                                                                 \
+  FREE(1);                                                       \
+  return out;                                                    \
+}
+
+static sexp tidy64_plus_tidy64_integer(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_plus_tidy64_integer_impl, tidy64_poke_names);
+}
+static sexp tidy64_plus_tidy64_logical(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_plus_tidy64_logical_impl, tidy64_poke_names);
+}
+static sexp tidy64_plus_tidy64_double(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_TIDY64_VECTOR(tidy64_plus_tidy64_double_impl, r_poke_names);
+}
+
+#undef TIDY64_OP_TIDY64_VECTOR
+
+
+#define TIDY64_OP_VECTOR_TIDY64(IMPL, POKE_NAMES) {              \
+  const r_ssize x_size = r_length(x);                            \
+  const r_ssize y_size = tidy64_size(y);                         \
+                                                                 \
+  sexp out = KEEP(IMPL(y, x, y_size, x_size, size));             \
+                                                                 \
+  sexp names = r_common_names(x, y, x_size, y_size);             \
+  POKE_NAMES(out, names);                                        \
+                                                                 \
+  FREE(1);                                                       \
+  return out;                                                    \
+}
+
+static sexp tidy64_plus_integer_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_plus_tidy64_integer_impl, tidy64_poke_names);
+}
+static sexp tidy64_plus_logical_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_plus_tidy64_logical_impl, tidy64_poke_names);
+}
+static sexp tidy64_plus_double_tidy64(sexp x, sexp y, r_ssize size) {
+  TIDY64_OP_VECTOR_TIDY64(tidy64_plus_tidy64_double_impl, r_poke_names);
+}
+
+#undef TIDY64_OP_VECTOR_TIDY64
+
+// -----------------------------------------------------------------------------
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_tidy64_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_tidy64_tidy64(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_tidy64_integer(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_tidy64_integer(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_integer_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_integer_tidy64(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_tidy64_logical(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_tidy64_logical(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_logical_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_logical_tidy64(x, y, c_size);
+}
+
 // [[ include("arithmetic.h") ]]
 sexp export_tidy64_plus_tidy64_double(sexp x, sexp y, sexp size) {
   const r_ssize c_size = r_int_const_deref(size)[0];
   return tidy64_plus_tidy64_double(x, y, c_size);
+}
+
+// [[ include("arithmetic.h") ]]
+sexp export_tidy64_plus_double_tidy64(sexp x, sexp y, sexp size) {
+  const r_ssize c_size = r_int_const_deref(size)[0];
+  return tidy64_plus_double_tidy64(x, y, c_size);
 }

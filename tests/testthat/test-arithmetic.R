@@ -34,6 +34,26 @@ test_that("warns and returns NA on overflow", {
   expect_identical(expect_warning(y + x), tidy64(NA))
 })
 
+test_that("keeps names", {
+  a <- tidy64(1)
+  b <- tidy64(1:2)
+  c <- set_names(a, "x")
+  d <- set_names(b, c("x", "y"))
+  e <- set_names(b, c("a", "b"))
+
+  expect_named(a + c, "x")
+  expect_named(c + a, "x")
+
+  expect_named(c + b, NULL)
+  expect_named(b + c, NULL)
+
+  expect_named(a + d, names(d))
+  expect_named(d + a, names(d))
+
+  expect_named(d + e, names(d))
+  expect_named(e + d, names(e))
+})
+
 # ------------------------------------------------------------------------------
 # tidy64 + integer
 # integer + tidy64
@@ -88,6 +108,29 @@ test_that("warns and returns NA on overflow", {
   expect_identical(expect_warning(y + x), tidy64(NA))
 })
 
+test_that("keeps names", {
+  a <- tidy64(1)
+  b <- tidy64(1:2)
+  c <- set_names(a, "x")
+  d <- set_names(b, c("x", "y"))
+
+  x <- 1L
+  y <- c(xx = 1L)
+  z <- c(xx = 1L, yy = 2L)
+
+  expect_named(a + y, names(y))
+  expect_named(y + a, names(y))
+
+  expect_named(y + b, NULL)
+  expect_named(b + y, NULL)
+
+  expect_named(a + z, names(z))
+  expect_named(z + a, names(z))
+
+  expect_named(d + z, names(d))
+  expect_named(z + d, names(z))
+})
+
 # ------------------------------------------------------------------------------
 # tidy64 + logical
 # logical + tidy64
@@ -140,6 +183,29 @@ test_that("warns and returns NA on overflow", {
 
   expect_identical(expect_warning(x + y), tidy64(NA))
   expect_identical(expect_warning(y + x), tidy64(NA))
+})
+
+test_that("keeps names", {
+  a <- tidy64(1)
+  b <- tidy64(1:2)
+  c <- set_names(a, "x")
+  d <- set_names(b, c("x", "y"))
+
+  x <- TRUE
+  y <- c(xx = TRUE)
+  z <- c(xx = TRUE, yy = TRUE)
+
+  expect_named(a + y, names(y))
+  expect_named(y + a, names(y))
+
+  expect_named(y + b, NULL)
+  expect_named(b + y, NULL)
+
+  expect_named(a + z, names(z))
+  expect_named(z + a, names(z))
+
+  expect_named(d + z, names(d))
+  expect_named(z + d, names(z))
 })
 
 # ------------------------------------------------------------------------------
@@ -218,4 +284,27 @@ test_that("infinity propagates", {
   expect_identical(y + x, Inf)
   expect_identical(x + z, -Inf)
   expect_identical(z + x, -Inf)
+})
+
+test_that("keeps names", {
+  a <- tidy64(1)
+  b <- tidy64(1:2)
+  c <- set_names(a, "x")
+  d <- set_names(b, c("x", "y"))
+
+  x <- 1
+  y <- c(xx = 1)
+  z <- c(xx = 1, yy = 1)
+
+  expect_named(a + y, names(y))
+  expect_named(y + a, names(y))
+
+  expect_named(y + b, NULL)
+  expect_named(b + y, NULL)
+
+  expect_named(a + z, names(z))
+  expect_named(z + a, names(z))
+
+  expect_named(d + z, names(d))
+  expect_named(z + d, names(z))
 })

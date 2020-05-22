@@ -11,6 +11,7 @@ extern sexp tidy64_ns_env;
 
 extern sexp syms_x;
 extern sexp syms_to;
+extern sexp syms_names;
 extern sexp syms_x_arg;
 extern sexp syms_to_arg;
 extern sexp syms_tidy64_names;

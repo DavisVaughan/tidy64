@@ -10,6 +10,7 @@ sexp tidy64_ns_env = NULL;
 
 sexp syms_x = NULL;
 sexp syms_to = NULL;
+sexp syms_names = NULL;
 sexp syms_x_arg = NULL;
 sexp syms_to_arg = NULL;
 sexp syms_tidy64_names = NULL;
@@ -40,6 +41,7 @@ void tidy64_initialize_utils_globals(sexp ns) {
 
   syms_x = Rf_install("x");
   syms_to = Rf_install("to");
+  syms_names = Rf_install("names");
   syms_x_arg = Rf_install("x_arg");
   syms_to_arg = Rf_install("to_arg");
   syms_tidy64_names = Rf_install("tidy64:::names");

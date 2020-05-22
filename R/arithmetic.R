@@ -96,7 +96,7 @@ vec_arith_integer_tidy64 <- function(op, x, y, ...) {
 }
 
 tidy64_plus_integer_tidy64 <- function(x, y, size) {
-  tidy64_plus_tidy64_integer(y, x, size)
+  .Call(export_tidy64_plus_integer_tidy64, x, y, size)
 }
 
 # ------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ vec_arith_double_tidy64 <- function(op, x, y, ...) {
 }
 
 tidy64_plus_double_tidy64 <- function(x, y, size) {
-  tidy64_plus_tidy64_double(y, x, size)
+  .Call(export_tidy64_plus_double_tidy64, x, y, size)
 }
 
 # ------------------------------------------------------------------------------
@@ -157,5 +157,5 @@ vec_arith.logical.tidy64 <- function(op, x, y, ...) {
 }
 
 tidy64_plus_logical_tidy64 <- function(x, y, size) {
-  tidy64_plus_tidy64_logical(y, x, size)
+  .Call(export_tidy64_plus_logical_tidy64, x, y, size)
 }
